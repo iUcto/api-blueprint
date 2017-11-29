@@ -298,7 +298,7 @@ Nelze  smazat doklady s EET, použijte [**Opravný daňový doklad**](#dobropisy
 
 *Hodnoty `id` a `items:id` jsou přiřazeny službou v momentu vytvoření nového záznamu.*
 
-## Seznam opravných daňových dokladů [/idcreditnote_issued]
+## Seznam opravných daňových dokladů [/creditnote_issued]
 ### Vypis všech dostupných dokladů [GET]
 Zjednodušený výpis všech dostupných dokladů.
 
@@ -309,9 +309,9 @@ Zjednodušený výpis všech dostupných dokladů.
 
 + Response 200 (application/hal+json)
 
-        {"_links":{"self":{"href":"\/1.1\/idcreditnote_issued"}},"_embedded":{"idcreditnote_issued":[{"_links":{"self":{"href":"\/1.1\/idcreditnote_issued\/13290"}},"id":13290,"invoice_issued_id":5666,"sequence_code":"ODV20140001","variable_symbol":"20140001","date":"2014-07-12","date_vat":"2014-07-12","maturity_date":"2014-08-12","currency":"CZK","price_inc_vat":2522.85,"to_be_paid":2522.85,"customer":{"_links":{"self":{"href":"\/1.1\/customer\/5779"}},"id":5779,"name":"Martin Nov\u00fd","comid":null,"vatid":null,"vat_payer":false,"email":null},"accounted":false,"eet":true,"deleted":false}]}}
+        {"_links":{"self":{"href":"\/1.1\/creditnote_issued"}},"_embedded":{"creditnote_issued":[{"_links":{"self":{"href":"\/1.1\/creditnote_issued\/13290"}},"id":13290,"invoice_issued_id":5666,"sequence_code":"ODV20140001","variable_symbol":"20140001","date":"2014-07-12","date_vat":"2014-07-12","maturity_date":"2014-08-12","currency":"CZK","price_inc_vat":2522.85,"to_be_paid":2522.85,"customer":{"_links":{"self":{"href":"\/1.1\/customer\/5779"}},"id":5779,"name":"Martin Nov\u00fd","comid":null,"vatid":null,"vat_payer":false,"email":null},"accounted":false,"eet":true,"deleted":false}]}}
  
-## Správa opravných daňových dokladů [/idcreditnote_issued/{id}]
+## Správa opravných daňových dokladů [/creditnote_issued/{id}]
 + Model (application/hal+json)
     + Body
     

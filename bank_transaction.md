@@ -574,24 +574,24 @@ Seznam dostupných měn
 - EUR
 - USD
 
-### COUNTRY (array)
+### COUNTRY (object)
 Ukázkový seznam států
 
 ## Sample
-- AD - Andorra
-- AE - Spojené arabské emiráty
-- AF - Afghánistán
-- AG - Antigua a Barbuda
+- AD: Andorra
+- AE: Spojené arabské emiráty
+- AF: Afghánistán
+- AG: Antigua a Barbuda
 
-### PREFERRED_PAYMENT_METHOD (array)
+### PREFERRED_PAYMENT_METHOD (object)
 Seznam dostupných metod platby
 
-## Sample
-- transfer - Bankovním převodem
-- cash - V hotovosti
-- proforma - Proforma
-- check - Šekem
-- creditcard - Platební kartou
+## Properties
+- transfer: Bankovním převodem
+- cash: V hotovosti
+- proforma: Proforma
+- check: Šekem
+- creditcard: Platební kartou
 
 
 ### `BANK_ACCOUNT_READONLY` (object)

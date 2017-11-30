@@ -104,18 +104,37 @@ Dostupnost se může měnit v závislosti na aktivaci rozšíření **Účtován
 + Response 200 (application/json)
     + Attributes (CURRENCY)
 
+## Státy [/country]
+<a name="country"></a>
+Zde uvedený výpis není kompletní, jedná se pouze o vzor.
+### Seznam dostupných států  [GET]
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/json)
+    + Attributes (COUNTRY)
+
+
+## Preferované metody platby [/preferred_payment_method]
+<a name="preferred_payment_method"></a>
+### Seznam dostupných metod  [GET]
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/json)
+    + Attributes (PREFERRED_PAYMENT_METHOD)
+
+
 # Group Firma
-<a name="bank_account"></a>
+
+
 ## Bankovní účty [/bank_account]
-
-- `id` *int* - **Id bankovního účtu**
-- `name` *string* - **Název**
-- `number` *string* - **Číslo účtu**
-- `currency` *string* -  [**Měna**](#currency)
-- `isdefault` *bool* - **Příznak, zda je účet nastaven jako výchozí**
-
+<a name="bank_account"></a>
 ### Seznam bankovních účtů [GET]
-Seznam dostupných bankovních účtů.
 + Request
     + Headers
 
@@ -127,8 +146,125 @@ Seznam dostupných bankovních účtů.
             - self (object)
                 - href: /1.1/bank_account (required)
         - _embedded (object)
-            - `bank_account` (array[`BANK_ACCOUNT`], required) - Pole bankovních účtů
+            - `bank_account` (array[`BANK_ACCOUNT_LIST`], required) - Pole bankovních účtů
+            
+            
+### Detail bankovního účtu [GET /bank_account/{id}]
++ Parameters
+    + id: 123 (number, required)
+        
++ Request
+    + Headers
 
+            X-Auth-Key: api-key
+            
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/bank_account/123 (required)
+        - _embedded (object)
+            - `bank_account` (`BANK_ACCOUNT_DETAIL`, required) - Detail bankovního účtu
+            
+            
+### Editace bankovního účtu [PUT /bank_account/{id}]
++ Parameters
+    + id: 123 (number, required)
+    
++ Request (application/json)
+    + Headers
+    
+            X-Auth-Key: api-key
+        
+    + Attributes (`BANK_ACCOUNT_PARAMS`)
+    
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/bank_account/123 (required)
+        - _embedded (object)
+            - `bank_account` (`BANK_ACCOUNT_DETAIL`, required) - Detail bankovního účtu
+            
+### Smazání bankovního účtu [DELETE /bank_account/{id}]
++ Parameters
+    + id: 123 (number, required)
+    
++ Request
+    + Headers
+    
+            X-Auth-Key: api-key
+        
++ Response 204
+
+
+## Pokladny [/cash_register]
+<a name="pokladny"></a>
+### Seznam pokladen [GET]
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/cash_register (required)
+        - _embedded (object)
+            - `cash_register` (array[`CASH_REGISTER`], required) - Pole dostupných pokladen
+
+### Detail pokladny [GET /cash_register/{id}]
++ Parameters
+    + id: 123 (number, required)
+        
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+            
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/cash_register/123 (required)
+        - _embedded (object)
+            - `cash_register` (`CASH_REGISTER`, required) - Detail pokladny
+
+
+## Provozovny [/business_premises]
+<a name="business_premises"></a>
+### Seznam provozoven [GET]
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/business_premises (required)
+        - _embedded (object)
+            - `business_premises` (array[`BUSINESS_PREMISES`], required) - Pole dostupných provozoven
+        
+# Group Adresář
+## Zákazníci [/customer]
+### Seznam zákazníků [GET]
+### Vytvoření zákazníka [POST /customer/{id}]
+### Detail zakazníka [GET /customer/{id}]
+### Editace zákazníka [PUT /customer/{id}]
+### Smazání zákazníka [DELETE /customer/{id}]
+
+
+## Dodavatelé [/supplier]
+### Seznam dodavatelů [GET]
+### Vytvoření dodavatele [POST /supplier/{id}]
+### Detail dodavatele [GET /supplier/{id}]
+### Editace dodavatele [PUT /supplier/{id}]
+### Smazání dodavatele [DELETE /supplier/{id}]
 
 # Group Platby
 
@@ -438,19 +574,87 @@ Seznam dostupných měn
 - EUR
 - USD
 
-### `BANK_ACCOUNT` (object)
+### COUNTRY (array)
+Ukázkový seznam států
+
+## Sample
+- AD - Andorra
+- AE - Spojené arabské emiráty
+- AF - Afghánistán
+- AG - Antigua a Barbuda
+
+### PREFERRED_PAYMENT_METHOD (array)
+Seznam dostupných metod platby
+
+## Sample
+- transfer - Bankovním převodem
+- cash - V hotovosti
+- proforma - Proforma
+- check - Šekem
+- creditcard - Platební kartou
+
+
+### `BANK_ACCOUNT_READONLY` (object)
 #### Properties
-- _link (object)
-    - self (object)
-        - href: /1.1/bank_account/456 (required)
-- id: 456 (number, required) - ID účtu
-- name: `Komerční Banka` (string, required) - Název účtu
+- id: 456 (number, required) - ID účtu)
 - number: `19-123457/0100` (string, required) - Číslo účtu
+
+### `BANK_ACCOUNT_BASE` (object)
+#### Properties
+- name: `Komerční Banka` (string, required) - Název účtu
 - currency: CZK (enum, sample, required) - [**Měna**](#currency)
 - isdefault: true (boolean, required) - Nastaven jako výchozí
 
+### `BANK_ACCOUNT_EXTRA` (object)
+#### Properties
+- account_prefix: 19 (number, optional) - Předčíslí účtu
+- account_number: 123457 (number, required) - Číslo účtu (bez předčíslí)
+- bank_code: 0100 (string, required) - Kód banky
+- swift: KOMBCZPPXXX (string, optional) - SWIFT
+- iban: CZ10INGB0697669236 (string, optional) - IBAN
+- initial_state: 0 (number) - Počátenční stav účtu
+- chart_account_id: 424 (number, optional) - [**Účet úč. osnovy**](#ucty_uc_osnovy)
+- chart_account_valid_from: `01-01-2017` (string, required) - Účet úč. osnovy platný od
+- visible: true (boolean) - Viditelnost účtu v seznamech
+
+### `BANK_ACCOUNT_LIST` (object)
+#### Properties
+- Include `BANK_ACCOUNT_READONLY`
+- Include `BANK_ACCOUNT_BASE`
+
+
 ### `BANK_ACCOUNT_DETAIL` (object)
 #### Properties
-- Include `BANK_ACCOUNT`
-- initial_state: 0 (number) - Počátenční stav účtu
-- visible: true (boolean) - Viditelnost účtu v seznamech
+- Include `BANK_ACCOUNT_READONLY`
+- Include `BANK_ACCOUNT_BASE`
+- Include `BANK_ACCOUNT_EXTRA`
+
+
+### `BANK_ACCOUNT_PARAMS` (object)
+#### Properties
+- Include `BANK_ACCOUNT_BASE`
+- Include `BANK_ACCOUNT_EXTRA`
+
+
+### `CASH_REGISTER` (object)
+#### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/cash_register/475 (required)
+- id: 475 (number, required) - ID účtu
+- name: `EET pokladna` (string, required) - Název pokladny
+- currency: CZK (enum, sample, required) - [**Měna**](#currency)
+- isdefault: true (boolean, required) - Nastavena jako výchozí
+- initial_state: 0 (number) - Počátenční stav pokladny
+- iseet: true (boolean, required) - Zda je pokladna nastavená pro EET
+- `business_premises` (BUSINESS_PREMISES, optional)  - [**Provozovna**](#business_premises)
+
+
+### `BUSINESS_PREMISES` (object)
+#### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/business_premises/897 (required)
+- id: 897 (number, required) - ID provozovny
+- name: `Restaurace u koníčka` (string, required) - Název provozovny
+- isdefault: true (boolean) - Nastavena jako výchozí

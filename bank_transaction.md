@@ -88,9 +88,9 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 | OP  | [Objednávky přijaté](#objednavky-prijate)     |
 | OV  | [Objednávky vydané](#objednavky-vydane)       |
 
-# Group Datové typy
+# Group Seznamy
 <a name="currency"></a>
-## Měna [/currency]
+## Měny [/currency]
 ### Seznam dostupných měn [GET]
 Seznam dostupných měn pro použití v dokladech.
 
@@ -104,33 +104,31 @@ Dostupnost se může měnit v závislosti na aktivaci rozšíření **Účtován
 + Response 200 (application/json)
     + Attributes (CURRENCY)
 
-## Státy [/country]
-<a name="country"></a>
-Zde uvedený výpis není kompletní, jedná se pouze o vzor.
-### Seznam dostupných států  [GET]
-+ Request
-    + Headers
-
-            X-Auth-Key: api-key
-
-+ Response 200 (application/json)
-    + Attributes (COUNTRY)
-
-
-## Preferované metody platby [/preferred_payment_method]
-<a name="preferred_payment_method"></a>
+## Metody plateb [/payment_type] 
+<a name="metody_plateb"></a>
 ### Seznam dostupných metod  [GET]
+Seznam dostupných metod pro provedení platby používaných v dokladech.
 + Request
     + Headers
 
             X-Auth-Key: api-key
 
 + Response 200 (application/json)
-    + Attributes (PREFERRED_PAYMENT_METHOD)
+    + Attributes (PAYMENT_TYPE)
+        
+## Způsoby zaokrouhlení [/rounding_type]
+<a name="zaokrouhleni"></a>
+### Seznam dostupných typů zaokrouhlení [GET]
+Seznam metod pro zaokrouhlování částek v dokladech.
++ Request
+    + Headers
 
+            X-Auth-Key: api-key
+
++ Response 200 (application/json)
+    + Attributes (ROUNDING_TYPE)
 
 # Group Firma
-
 
 ## Bankovní účty [/bank_account]
 <a name="bank_account"></a>
@@ -233,6 +231,13 @@ Zde uvedený výpis není kompletní, jedná se pouze o vzor.
         - _embedded (object)
             - `cash_register` (`CASH_REGISTER`, required) - Detail pokladny
 
+## Střediska [/department]
+<a name="strediska"></a>
+### Seznam středisek [GET]
+
+## Zakázky [/contract]
+<a name="zakazky"></a>
+### Seznam zakázek [GET]
 
 ## Provozovny [/business_premises]
 <a name="business_premises"></a>
@@ -249,7 +254,8 @@ Zde uvedený výpis není kompletní, jedná se pouze o vzor.
                 - href: /1.1/business_premises (required)
         - _embedded (object)
             - `business_premises` (array[`BUSINESS_PREMISES`], required) - Pole dostupných provozoven
-        
+
+   
 # Group Adresář
 ## Zákazníci [/customer]
 ### Seznam zákazníků [GET]
@@ -266,7 +272,62 @@ Zde uvedený výpis není kompletní, jedná se pouze o vzor.
 ### Editace dodavatele [PUT /supplier/{id}]
 ### Smazání dodavatele [DELETE /supplier/{id}]
 
+
+## Státy [/country]
+<a name="country"></a>
+Zde uvedený výpis není kompletní, jedná se pouze o vzor.
+### Seznam dostupných států  [GET]
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/json)
+    + Attributes (COUNTRY)
+
+
+## Preferované metody platby [/preferred_payment_method]
+<a name="preferred_payment_method"></a>
+### Seznam dostupných metod  [GET]
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/json)
+    + Attributes (PREFERRED_PAYMENT_METHOD)
+   
+
+# Group Doklady vydané
+## Group Faktury vydané [/payment_issued]
+<!--
+## Group Zálohové faktury vydané [/proforma_invoice_issued]
+-->
+## Group Objednávky vydané [/order_issued]
+<!--
+## Group Nabídky [/offer_issued]
+-->
+## Group Opravné daňové doklady [/creditnote_issued]
+
+# Group Doklady přijaté
+## Group Faktury přijaté [/payment_received]
+<!--
+## Group Zálohové faktury přijaté [/proforma_invoice_received]
+-->
+
+## Group Objednávky přijaté [/order_received]
+<!--
+## Group Poptávky [/offer_received]
+-->
+<!--
+## Group Opravné daňové doklady [/creditnote_received]
+-->
+
 # Group Platby
+
+## Group Platby vydané [/payment_issued]
+
+# Group Platby přijaté [/payment_received]
 
 ## Bankovní pohyby [/bank_transaction] 
 
@@ -475,13 +536,16 @@ Odpověd obsahuje pole dostupných Účty DPH pro použití v dokladech.
     
         {"281":"98006000 - Příjem DPH (vratka)","302":"96009000 - Platba DPH"}
 
+# Group EET
+## EET záznamy [/eet_status]
+### Seznam záznamů [GET]
 
 
 ## Data Structures
 
 ### `BANK_STATEMENT_BASE` (object)
 #### Properties
-- `payment_type` (PAYMENT_TYPE, required) - Typ pohybu
+- `payment_type` (PAYMENT_DIRECTION, required) - Typ pohybu
 - price: 7845 (PRICE, required) - Částka
 - currency: CZK (enum, sample, required) - [**Měna**](#currency)
 - `date_payment`: `2017-01-24` (string, optional) - Datum platby
@@ -545,7 +609,7 @@ Tento objekt reprezentuje zjednodušený náhled bankovní transakce.
 - `counterparty` (object, optional) - protistrany, pro příchozí pohyb [Zákazník](#zakaznici), pro odchozí [Dodavatel](#dodavatele)
 
 
-### `PAYMENT_TYPE` (enum)
+### `PAYMENT_DIRECTION` (enum)
 
 Směr platby.
 
@@ -592,6 +656,25 @@ Seznam dostupných metod platby
 - proforma: Proforma
 - check: Šekem
 - creditcard: Platební kartou
+
+### PAYMENT_TYPE (object)
+Seznam dostupných metod pro provedení platby používaných v dokladech.
+
+## Properties
+- transfer: Bankovním převodem
+- cash: Hotově
+- cashondelivery: Dobírka
+- reciprocity: Reciproce
+- creditcard: Platební kartou
+
+### ROUNDING_TYPE (object)
+Seznam metod pro zaokrouhlování částek v dokladech.
+
+## Properties
+- none: žádné
+- round: zaokrouhlit
+- up: zaokrouhlit nahoru
+- down: zaokrouhlit dolů
 
 
 ### `BANK_ACCOUNT_READONLY` (object)

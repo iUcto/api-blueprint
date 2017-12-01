@@ -258,12 +258,111 @@ Seznam metod pro zaokrouhlování částek v dokladech.
    
 # Group Adresář
 ## Zákazníci [/customer]
-### Seznam zákazníků [GET]
-### Vytvoření zákazníka [POST /customer/{id}]
-### Detail zakazníka [GET /customer/{id}]
-### Editace zákazníka [PUT /customer/{id}]
-### Smazání zákazníka [DELETE /customer/{id}]
 
+| Parametr                 |   Typ  | Délka | Popis                                                      |
+|--------------------------|:------:|:-----:|------------------------------------------------------------|
+| id                       |   int  |   11  | Id zákazníka                                               |
+| name                     | string |  100  | Jméno zákazníka                                            |
+| name_display             | string |  100  | Zobrazované jméno                                          |
+| comid                    | string |   20  | IČ                                                         |
+| vatid                    | string |   20  | DIČ                                                        |
+| vat_payer                |  bool  |   -   | Plátce DPHP (ano/ne)                                       |
+| email                    | string |   40  | Email                                                      |
+| phone                    | string |   20  | Telefon                                                    |
+| cellphone                | string |  100  | Mobil                                                      |
+| www                      | string |  100  | WWW                                                        |
+| usual_maturity           | string |  100  | Obvyklá splatnost [dny]                                    |
+| preferred_payment_method | string |  100  | [**Preferovaná metoda platby**](#preferred_payment_method) |
+| invoice_language         | string |   2   | Jazyk faktury [cs, sk, en, de]                                 |
+| note                     | string |  1000 | Poznámka                                                   |
+| account_number1          | string |   45  | Číslo účtu 1                                               |
+| account_number2          | string |   45  | Číslo účtu 2                                               |
+| account_number3          | string |   45  | Číslo účtu 3                                               |
+| account_number4          | string |   45  | Číslo účtu 4                                               |
+| address                  | object |   -   | Pole s adresou                                             |
+
+**Adresa**
+
+| Parametr                 |   Typ  | Délka | Popis                                                      |
+|--------------------------|:------:|:-----:|------------------------------------------------------------|
+| street           | string |  100  | Ulice a č.p.                                               |
+| city             | string |   50  | Město                                                      |
+| postalcode       | string |   20  | PSČ                                                        |
+| country          | string |   2   | [**Kód země**](#country)                                   |
+
+
+### Seznam zákazníků [GET]
+Zjednodušený výpis všech dostupných zákazníků.
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/customer (required)
+        - _embedded (object)
+            - `customer` (array[`CUSTOMER_LIST`], required) - Pole zákazníků
+
+### Vytvoření zákazníka [POST /customer]
+Přidání zákazníka do adresáře
+
++ Request (application/json)
+    + Headers
+    
+            X-Auth-Key: api-key
+        
+    + Attributes (`CUSTOMER_PARAMS`)
+            
++ Response 200 (application/json)
+    + Attributes (`CUSTOMER_DETAIL`)
+            
+### Detail zakazníka [GET /customer/{id}]
+Podrobný výpis zákazníka
+
++ Parameters
+    + id: 123 (number, required)
+        
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+            
+            
++ Response 200 (application/json)
+    + Attributes (`CUSTOMER_DETAIL`)
+    
+### Editace zákazníka [PUT /customer/{id}]
+Úprava exitujícího zákazníka
+
++ Parameters
+    + id: 123 (number, required)
+    
++ Request (application/json)
+    + Headers
+    
+            X-Auth-Key: api-key
+        
+    + Attributes (`CUSTOMER_PARAMS`)
+    
++ Response 200 (application/json)
+    + Attributes (`CUSTOMER_DETAIL`)
+            
+### Smazání zákazníka [DELETE /customer/{id}]
+Pokusí se smazat vybraného zákazníka. Pokud je ovšem vázán na jiný záznam (faktury, platba, apod.), vrátí chybu a zákazník se nasmaže.
+
++ Parameters
+    + id: 123 (number, required)
+    
++ Request
+    + Headers
+    
+            X-Auth-Key: api-key
+        
++ Response 204
 
 ## Dodavatelé [/supplier]
 ### Seznam dodavatelů [GET]
@@ -273,10 +372,10 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 ### Smazání dodavatele [DELETE /supplier/{id}]
 
 
-## Státy [/country]
+## Země [/country]
 <a name="country"></a>
 Zde uvedený výpis není kompletní, jedná se pouze o vzor.
-### Seznam dostupných států  [GET]
+### Seznam dostupných zemí  [GET]
 + Request
     + Headers
 
@@ -284,7 +383,6 @@ Zde uvedený výpis není kompletní, jedná se pouze o vzor.
 
 + Response 200 (application/json)
     + Attributes (COUNTRY)
-
 
 ## Preferované metody platby [/preferred_payment_method]
 <a name="preferred_payment_method"></a>
@@ -295,11 +393,11 @@ Zde uvedený výpis není kompletní, jedná se pouze o vzor.
             X-Auth-Key: api-key
 
 + Response 200 (application/json)
-    + Attributes (PREFERRED_PAYMENT_METHOD)
+    + Attributes (`PREFERRED_PAYMENT_METHOD`)
    
 
 # Group Doklady vydané
-## Group Faktury vydané [/payment_issued]
+## Group Faktury vydané [/invoice_issued]
 <!--
 ## Group Zálohové faktury vydané [/proforma_invoice_issued]
 -->
@@ -310,7 +408,7 @@ Zde uvedený výpis není kompletní, jedná se pouze o vzor.
 ## Group Opravné daňové doklady [/creditnote_issued]
 
 # Group Doklady přijaté
-## Group Faktury přijaté [/payment_received]
+## Group Faktury přijaté [/invoice_received]
 <!--
 ## Group Zálohové faktury přijaté [/proforma_invoice_received]
 -->
@@ -541,10 +639,10 @@ Odpověd obsahuje pole dostupných Účty DPH pro použití v dokladech.
 ### Seznam záznamů [GET]
 
 
-## Data Structures
+# Data Structures
 
-### `BANK_STATEMENT_BASE` (object)
-#### Properties
+## `BANK_STATEMENT_BASE` (object)
+### Properties
 - `payment_type` (PAYMENT_DIRECTION, required) - Typ pohybu
 - price: 7845 (PRICE, required) - Částka
 - currency: CZK (enum, sample, required) - [**Měna**](#currency)
@@ -556,11 +654,11 @@ Odpověd obsahuje pole dostupných Účty DPH pro použití v dokladech.
 - `bank_account`: 544 (number, optional) - [**ID bankovního účtu**](#bank_account)
 - `bank_account_contraparty`: `19-123457/0710` (string, optional) - Číslo bankovního účtu protistrany
 
-### `BANK_STATEMENT_EXTRA` (object)
+## `BANK_STATEMENT_EXTRA` (object)
 
 Tento objekt reprezentuje detail bankovní transakce.
 
-#### Properties
+### Properties
 
 - `variable_symbol2` (string, optional)
 - `description_tome` (string, optional) - Poznámka pro mě
@@ -572,15 +670,15 @@ Tento objekt reprezentuje detail bankovní transakce.
 - `chart_account`:46 (number, optional)- [**Účet úč. osnovy**](#ucty_uc_osnovy)
 - `vat_chart`:52 (number, optional) - [**Účet DPH**](#ucty_dph)
 
-### `BANK_STATEMENT_READONLY` (object)
-#### Properties
+## `BANK_STATEMENT_READONLY` (object)
+### Properties
 - id: 7745 (number, required) - Unikátní id transakce v systému.
 - status (`BANK_STATEMENT_STATUS`, required) - Stav spárování
-- price_czk (number) - Částka v CZK podle kurzu k datu pohybu
+- `price_czk` (number) - Částka v CZK podle kurzu k datu pohybu
 
 
-### `BANK_STATEMENT_PARAMS` (object)
-#### Properties
+## `BANK_STATEMENT_PARAMS` (object)
+### Properties
 - Include `BANK_STATEMENT_BASE`
 - Include `BANK_STATEMENT_EXTRA`
 - One Of
@@ -589,138 +687,166 @@ Tento objekt reprezentuje detail bankovní transakce.
         - `chart_account`:46 (number, optional)- [**Účet úč. osnovy**](#ucty_uc_osnovy)
         - `vat_chart`:52 (number, optional) - [**Účet DPH**](#ucty_dph)
 
-### `BANK_STATEMENT_DETAIL` (object)
+## `BANK_STATEMENT_DETAIL` (object)
 
 Tento objekt reprezentuje zjednodušený náhled bankovní transakce.
 
-#### Properties
+### Properties
 - Include `BANK_STATEMENT_LIST`
 - Include `BANK_STATEMENT_EXTRA`
 - `linked_docs` (array[object], optional) - Seznam spárovaných dokladů
 
-### `BANK_STATEMENT_LIST` (object)
+## `BANK_STATEMENT_LIST` (object)
 
 Tento objekt reprezentuje zjednodušený náhled bankovní transakce.
 
-#### Properties
+### Properties
 - Include `BANK_STATEMENT_READONLY`
 - Include `BANK_STATEMENT_BASE`
-- `bank_account` (BANK_ACCOUNT_DETAIL, optional) - [**Bankovní účet**](#bank_account)
+- `bank_account` (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bank_account)
 - `counterparty` (object, optional) - protistrany, pro příchozí pohyb [Zákazník](#zakaznici), pro odchozí [Dodavatel](#dodavatele)
 
 
-### `PAYMENT_DIRECTION` (enum)
+## `PAYMENT_DIRECTION` (enum)
 
 Směr platby.
 
-#### Members
+### Members
 
 - in - Příchozí platba
 - out - Odchozí platba
 
-### PRICE (number)
+## `PRICE` (number)
 
 
-### `BANK_STATEMENT_STATUS` (enum)
+## `BANK_STATEMENT_STATUS` (enum)
 
-#### Members
+### Members
 - notprocessed - Nezpracováno
 - unmatched - Nespárováno
 - matched - Spárováno
 - halfmatcheded - Částečně spárováno
 - accounted - Zaúčtováno
 
-### CURRENCY (array)
+## `CURRENCY` (array)
 Seznam dostupných měn
 
-## Sample
+### Sample
 - CZK
 - EUR
 - USD
 
-### COUNTRY (object)
-Ukázkový seznam států
+## `COUNTRY` (object)
+Ukázkový seznam zemí
 
-## Sample
+### Sample
 - AD: Andorra
 - AE: Spojené arabské emiráty
 - AF: Afghánistán
 - AG: Antigua a Barbuda
 
-### PREFERRED_PAYMENT_METHOD (object)
+## `COUNTRY_ENUM` (enum)
+Ukázkový seznam zemí
+
+### Members
+- CZ - Česká Republika
+- AE - Spojené arabské emiráty
+- AF -  Afghánistán
+- AG - Antigua a Barbuda
+
+##`PREFERRED_PAYMENT_METHOD` (object)
 Seznam dostupných metod platby
 
-## Properties
+### Properties
 - transfer: Bankovním převodem
 - cash: V hotovosti
 - proforma: Proforma
 - check: Šekem
 - creditcard: Platební kartou
 
-### PAYMENT_TYPE (object)
+## `PREFERRED_PAYMENT_METHOD_ENUM` (enum)
+Seznam metod platby
+
+### Members
+- transfer - Bankovním převodem
+- cash - V hotovosti
+- proforma - Proforma
+- check - Šekem
+- creditcard - Platební kartou
+
+## `INVOICE_LANG` (enum)
+Seznam jazyků tisk faktury
+
+### Members
+- cs - česky
+- en - anglicky
+- sk - slovensky
+- de - německy
+
+## `PAYMENT_TYPE` (object)
 Seznam dostupných metod pro provedení platby používaných v dokladech.
 
-## Properties
+### Properties
 - transfer: Bankovním převodem
 - cash: Hotově
 - cashondelivery: Dobírka
 - reciprocity: Reciproce
 - creditcard: Platební kartou
 
-### ROUNDING_TYPE (object)
+## `ROUNDING_TYPE` (object)
 Seznam metod pro zaokrouhlování částek v dokladech.
 
-## Properties
+### Properties
 - none: žádné
 - round: zaokrouhlit
 - up: zaokrouhlit nahoru
 - down: zaokrouhlit dolů
 
 
-### `BANK_ACCOUNT_READONLY` (object)
-#### Properties
-- id: 456 (number, required) - ID účtu)
+## `BANK_ACCOUNT_READONLY` (object)
+### Properties
+- id: 456 (number, required) - ID účtu
 - number: `19-123457/0100` (string, required) - Číslo účtu
 
-### `BANK_ACCOUNT_BASE` (object)
-#### Properties
+## `BANK_ACCOUNT_BASE` (object)
+### Properties
 - name: `Komerční Banka` (string, required) - Název účtu
 - currency: CZK (enum, sample, required) - [**Měna**](#currency)
 - isdefault: true (boolean, required) - Nastaven jako výchozí
 
-### `BANK_ACCOUNT_EXTRA` (object)
-#### Properties
-- account_prefix: 19 (number, optional) - Předčíslí účtu
-- account_number: 123457 (number, required) - Číslo účtu (bez předčíslí)
-- bank_code: 0100 (string, required) - Kód banky
+## `BANK_ACCOUNT_EXTRA` (object)
+### Properties
+- `account_prefix`: 19 (number, optional) - Předčíslí účtu
+- `account_number`: 123457 (number, required) - Číslo účtu (bez předčíslí)
+- `bank_code`: 0100 (string, required) - Kód banky
 - swift: KOMBCZPPXXX (string, optional) - SWIFT
-- iban: CZ10INGB0697669236 (string, optional) - IBAN
-- initial_state: 0 (number) - Počátenční stav účtu
-- chart_account_id: 424 (number, optional) - [**Účet úč. osnovy**](#ucty_uc_osnovy)
-- chart_account_valid_from: `01-01-2017` (string, required) - Účet úč. osnovy platný od
+- iban: `CZ10INGB0697669236` (string, optional) - IBAN
+- `initial_state`: 0 (number) - Počátenční stav účtu
+- `chart_account_id`: 424 (number, optional) - [**Účet úč. osnovy**](#ucty_uc_osnovy)
+- `chart_account_valid_from`: `01-01-2017` (string, required) - Účet úč. osnovy platný od
 - visible: true (boolean) - Viditelnost účtu v seznamech
 
-### `BANK_ACCOUNT_LIST` (object)
-#### Properties
+## `BANK_ACCOUNT_LIST` (object)
+### Properties
 - Include `BANK_ACCOUNT_READONLY`
 - Include `BANK_ACCOUNT_BASE`
 
 
-### `BANK_ACCOUNT_DETAIL` (object)
-#### Properties
+## `BANK_ACCOUNT_DETAIL` (object)
+### Properties
 - Include `BANK_ACCOUNT_READONLY`
 - Include `BANK_ACCOUNT_BASE`
 - Include `BANK_ACCOUNT_EXTRA`
 
 
-### `BANK_ACCOUNT_PARAMS` (object)
-#### Properties
+## `BANK_ACCOUNT_PARAMS` (object)
+### Properties
 - Include `BANK_ACCOUNT_BASE`
 - Include `BANK_ACCOUNT_EXTRA`
 
 
-### `CASH_REGISTER` (object)
-#### Properties
+## `CASH_REGISTER` (object)
+### Properties
 - _link (object)
     - self (object)
         - href: /1.1/cash_register/475 (required)
@@ -728,16 +854,83 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - name: `EET pokladna` (string, required) - Název pokladny
 - currency: CZK (enum, sample, required) - [**Měna**](#currency)
 - isdefault: true (boolean, required) - Nastavena jako výchozí
-- initial_state: 0 (number) - Počátenční stav pokladny
+- `initial_state`: 0 (number) - Počátenční stav pokladny
 - iseet: true (boolean, required) - Zda je pokladna nastavená pro EET
-- `business_premises` (BUSINESS_PREMISES, optional)  - [**Provozovna**](#business_premises)
+- `business_premises` (`BUSINESS_PREMISES`, optional)  - [**Provozovna**](#business_premises)
 
 
-### `BUSINESS_PREMISES` (object)
-#### Properties
+## `BUSINESS_PREMISES` (object)
+### Properties
 - _link (object)
     - self (object)
         - href: /1.1/business_premises/897 (required)
 - id: 897 (number, required) - ID provozovny
 - name: `Restaurace u koníčka` (string, required) - Název provozovny
 - isdefault: true (boolean) - Nastavena jako výchozí
+
+
+## `CUSTOMER_READONLY` (object)
+### Properties
+- id: 123 (number, required) - ID zákazníka
+
+## `CUSTOMER_BASE` (object)
+### Properties
+- name: `Jan Novák` (string, required) - Jméno zákazníka
+- ico: `00685776` (string, optional) - IČO
+- email: `novak.jan@iucto.cz` (string, optional) - Email
+
+## `CUSTOMER_EXTRA` (object)
+### Properties
+- phone: `+420123123123` (string, optional) - Telefon
+- cellphone: `+420123123123` (string, optional) - Mobil
+- www: `http://www.iucto.cz` (string, optional) - WWW
+- `usual_maturity: `30` (number, required) - Obvyklá splatnost ve dnech
+- `preferred_payment_method` (`PREFERRED_PAYMENT_METHOD_ENUM`, required) - [Preferovaná metoda platby](#preferred_payment_method)
+- `invoice_language` (`INVOICE_LANG`, required) - Jazyk faktury
+- address (ADDRESS, required) - Adresa
+- note: `Věrný zákazník` (string, optional) - Poznámka
+- `account_number1`: `1230123/0100` (string, optional) - Číslo účtu 1
+- `account_number2` (string, optional) - Číslo účtu 2
+- `account_number3` (string, optional) - Číslo účtu 3
+- `account_number4` (string, optional) - Číslo účtu 4
+
+
+## `CUSTOMER_LIST` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/customer/123 (required)
+- Include `CUSTOMER_READONLY`
+- Include `CUSTOMER_BASE`
+- `vat_payer`: `false` (boolean, required) - Příznak plátce DPH
+
+
+## `CUSTOMER_DETAIL` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/customer/123 (required)
+- Include `CUSTOMER_READONLY`
+- Include `CUSTOMER_BASE`
+- dic (string, optional) - DIČ
+- `vat_payer`: `false` (boolean, required) - Příznak plátce DPH
+- Include `CUSTOMER_EXTRA`
+
+
+## `CUSTOMER_PARAMS` (object)
+### Properties
+- Include `CUSTOMER_BASE`
+- One Of
+    - Properties
+        - dic: `CZ00685776` (string, required) - DIČ
+        - `vat_payer`: `true` (boolean, required) - Plátce DPH
+    - Properties
+        - `vat_payer`: `false` (boolean, required) - Neplátce DPH
+- Include `CUSTOMER_EXTRA`
+
+## `ADDRESS` (object)
+### Properties
+- street: `Stodolní 123` (string, optional) - Ulice
+- city: `Ostrava` (string, optional) - Město
+- postalcode: `385 02` (string, optional) - Poštovní směrovací číslo
+- country: `CZ` (`COUNTRY_ENUM`, required) - [Země](#country)

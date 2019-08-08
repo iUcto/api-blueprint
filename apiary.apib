@@ -213,6 +213,20 @@ Pokud má doklad nastaveno EET, vrátí se jeho status.
 + Response 200
         [Správa faktur vydaných][]
 
+### Stažení PDF [GET /invoice_issued/{id}/pdf]
+
+Vrátí binární data PDF souboru pro tisk nebo uložení do souboru.
+
++ Parameters
+    + id (int) ... ID dokladu
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/pdf)
+
 ### Editace dokladu [PUT]
 Aktulizuje předané parametry vybraného dokladu.
 Poviné pole jsou stejná jako při vkládání nového záznamu.
@@ -245,7 +259,8 @@ Nelze  smazat doklady s EET, použijte [**Opravný daňový doklad**](#dobropisy
             X-Auth-Key: api-key
 
 + Response 204
-         
+
+
 # Group Opravné daňové doklady
 <a name="dobropisy"/>
 

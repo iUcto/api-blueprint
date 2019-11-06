@@ -395,10 +395,124 @@ Zde uvedený výpis není kompletní, jedná se pouze o vzor.
 
 
 # Group Doklady vydané
-## Group Faktury vydané [/invoice_issued]
-<!--
-## Group Zálohové faktury vydané [/proforma_invoice_issued]
--->
+## Faktury vydané [/invoice_issued]
+
+### Seznam faktur [GET /invoice_issued{?customer_id,customer_ico,date_from,date_to,maturity_date_from,maturity_date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,paid,deleted,accounted,payment_type,bank_account}]
+
+Seznam faktur vydaných.
+
++ Parameters
+     + customer_id (number) - ID odběratele
+     + customer_ico - IČO odběratele
+     + date_from - Datum vystavení OD
+     + date_to - Datum vystavení DO
+     + maturity_date_from - Datum splatnosti OD
+     + maturity_date_to - Datum splatnosti DO
+     + date_vat_from - Datum zdanitelného plnění OD
+     + date_vat_to - Datum zdanitelného plnění DO
+     + sequence_code - Číslo dokladu
+     + variable_symbol - Variabilní symbol
+     + currency - Měna dokladu
+     + price_from (number) - Cena celkem OD
+     + price_to (number) - Cena celkem DO
+     + paid (boolean) - Zaplaceno
+     + deleted (boolean) - Smazáno
+     + accounted (boolean) - Zaúčtované
+     + payment_type (number) - ID forma úhrady
+     + bank_account (number) - ID bankovní účet
+            
++ Request
+    + Headers
+    
+            X-Auth-Key: api-key
+    
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/invoice_issued (required)
+        - _embedded (object)
+            - `invoice_issued` (array[`INVOICE_ISSUED_LIST`], required) - Pole dostupných vydaných faktur
+
+### Detail faktury [GET /invoice_issued/{id}]
+
+Podrobné inforamce k faktuře vydané.
+
++ Parameters
+    + id: 123 (number, required)
+        
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+            
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/invoice_issued/123 (required)
+        - _embedded (object)
+            - `invoice_issued` (INVOICE_ISSUED_GET_DETAIL, required) - Detail faktury
+            
+### Vytvoření faktury [POST /invoice_issued]
+
+Vytvoření faktury vydané.
+
++ Request
+    + Headers
+
+        X-Auth-Key: api-key
+        Content-Type: application/json
+            
+    + Attributes (`INVOICE_ISSUED_DETAIL`)
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/invoice_issued/123 (required)
+        - _embedded (object)
+            - `invoice_issued` (INVOICE_ISSUED_GET_DETAIL, required) - Detail faktury
+            
+### Editace faktury [PUT /invoice_issued/{id}]
+
+Editace faktury vydané.
+
++ Parameters
+    + id: 123 (number, required)
+    
++ Request
+    + Headers
+
+        X-Auth-Key: api-key
+        Content-Type: application/json
+            
+    + Attributes (`INVOICE_ISSUED_DETAIL`)
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/invoice_issued/123 (required)
+        - _embedded (object)
+            - `invoice_issued` (INVOICE_ISSUED_GET_DETAIL, required) - Detail faktury
+            
+### Stažení PDF faktury [GET /invoice_issued/{id}/pdf]
+
+Stažení PDF faktury vydané.
+
+
+### Smazání faktury [DELETE /invoice_issued/{id}]
+
+Smazání faktury vydané.
+
+
+
+
+
+
 ## Group Objednávky vydané [/order_issued]
 <!--
 ## Group Nabídky [/offer_issued]
@@ -932,3 +1046,85 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - city: `Ostrava` (string, optional) - Město
 - postalcode: `385 02` (string, optional) - Poštovní směrovací číslo
 - country: `CZ` (`COUNTRY_ENUM`, required) - [Země](#country)
+
+## `INVOICE_ISSUED_BASE` (object)
+### Properties
+- sequence_code: `FV20140001` (string, optional) - Číslo dokladu
+- variable_symbol: `20140001` (string, optional) - Variabilní symbol
+- date: `2014-07-12` (string, required) - Datum vystavení ve formátu yyyy-mm-dd
+- date_vat: `2014-07-12` (string, required) - Datum zdanitelného plnění ve formátu yyyy-mm-dd
+- maturity_date: `2014-08-12` (string, required) - Datum splatnosti plnění ve formátu yyyy-mm-dd
+- currency: CZK (enum, sample, required) - [**Měna**](#currency)
+
+## `INVOICE_ISSUED_LIST` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/invoice_issued/123 (required)
+- id: 13290 (number)
+- Include `INVOICE_ISSUED_BASE`
+- price_inc_vat: (number) 50
+- to_be_paid: (number) 50
+- `customer` (array[`CUSTOMER_LIST`], required) - Pole zákazníků
+- accounted: true
+- deleted: false
+- eet: false
+- proforma_invoice (array) - Pole faktur
+    -id: (number) 123456
+
+## `INVOICE_ISSUED_DETAIL` (object)
+- Include `INVOICE_ISSUED_BASE`
+- price: 50
+- price_czk: 50
+- price_inc_vat: 50
+- price_inc_vat_czk: 50
+- to_be_paid: 50
+- customer_id: 1621 (number, required) - [Zákazník](#zakaznici)
+- customer_bank_account: null
+- payment_type: (PAYMENT_DIRECTION, required) - [**Platební metody**](#metody_plateb)
+- `bank_account` (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bank_account)
+- date_vat_prev: null
+- description: null
+- rounding_type: `none`
+- items (array[`INVOICE_ITEMS_DETAIL`], required) - Pole položek
+- business_premises: null,
+- eet_status (object[`EET_STATUS_DETAIL`], required) - EET detail
+- order_id: null
+
+## `INVOICE_ISSUED_GET_DETAIL` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/invoice_issued/123 (required)
+- id: 13290 (number)
+- Include `INVOICE_ISSUED_BASE`
+- `customer` (array[`CUSTOMER_DETAIL`], required) - Pole zákazníků
+- Include `INVOICE_ISSUED_DETAIL`
+
+## `INVOICE_ITEMS_DETAIL` (object)
+### Properties
+- id: 123456 (number) - ID položky
+- text: `Položka A` (string, required) - Popis položky
+- amount: 1 (number, required) - Počet kusů
+- price: 50 (number, required) - Cena
+- unit_price_inc_vat: false
+- unit: null (string) - Jednotka
+- vat: 0 (number) - [**DPH**](#kurz_dph)
+- accountentrytype_id: (number, optional) - [**Typ účetní položky**](#položky typy_uc_polozek)
+- vattype_id: 1 (number, optional) - [**Seznam typů DPH**](#typy_dph)
+- department_id: 0 (number) - [**Střediska**](#strediska)
+- contract_id: 0 (number) - [**Zakázky**](#zakazky)
+- chart_account_id: 46 (number, optional)- [**Účet úč. osnovy**](#ucty_uc_osnovy)
+- vat_chart_id: 52 (number, optional) - [**Účet DPH**](#ucty_dph)
+- vat_total: 0 (number) - DPH celkem
+
+## `EET_STATUS_DETAIL` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/eet_status/
+- id: null
+- status: null
+- fik: null
+- bkp: null
+- pkp: null

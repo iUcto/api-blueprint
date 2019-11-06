@@ -501,13 +501,32 @@ Editace faktury vydané.
             
 ### Stažení PDF faktury [GET /invoice_issued/{id}/pdf]
 
-Stažení PDF faktury vydané.
+Vrátí binární data PDF souboru pro tisk nebo uložení do souboru.
 
++ Parameters
+    + id: 123 (number, required)
+    
++ Request
+    + Headers
+
+        X-Auth-Key: api-key    
+            
++ Response 200 (Content-Type:application/pdf)
+    
 
 ### Smazání faktury [DELETE /invoice_issued/{id}]
 
-Smazání faktury vydané.
+Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nasmaže. Nelze smazat doklady s EET, použijte Opravný daňový doklad.
 
++ Parameters
+    + id: 123 (number, required)
+    
++ Request
+    + Headers
+
+        X-Auth-Key: api-key    
+        
++ Response 204
 
 
 

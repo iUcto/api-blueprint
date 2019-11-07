@@ -74,6 +74,17 @@ Při komunikaci prostřednictvím API má uživatel stejná oprávnění jako u 
 
 **[Správa ACL](https://online.iucto.cz/users)**
 
+# Datové typy
+| Datový typ | Popis                                                |
+|------------|------------------------------------------------------|
+| String     | Textoví řetězec v kódování UTF-8                     | 
+| Number     | Celé číslo                                           |
+| Boolean    | Hodnoty `true` a `false`                             |
+| Date       | Datum ve formátu `YYYY-mm-dd`                        |
+| Price      | Číslo se dvemi desetinými místy ve formátu `1500.10` |
+
+Parametry uvedené jako volitelné, mohou nabývat hodnot `NULL`.
+
 # Typy dokladů
 Seznam dostupných dokladů přes API a jejich interní identifikátory pro získání např. [Typů DPH](#typy_dph).
 
@@ -413,8 +424,8 @@ Seznam faktur vydaných.
      + sequence_code - Číslo dokladu
      + variable_symbol - Variabilní symbol
      + currency - Měna dokladu
-     + price_from (number) - Cena celkem OD
-     + price_to (number) - Cena celkem DO
+     + price_from (price) - Cena celkem OD
+     + price_to (price) - Cena celkem DO
      + paid (boolean) - Zaplaceno
      + deleted (boolean) - Smazáno
      + accounted (boolean) - Zaúčtované
@@ -675,11 +686,11 @@ Při editacy typu platby (`payment_type`) se musí také změnit hodnoty `counte
 
 
 # Group Účetnictví
-## Kurzy DPH [/vat_rates?date={date}]
+## Kurzy DPH [/vat_rates?{date}]
 <a name="kurz_dph"></a>
 ### Seznam kurzů DPH k danému datu [GET]
 + Parameters
-    + date (string) ... Datum ve formátu yyy-mm-dd, pro které nás zajímají sazby
+    + date: `2019-02-28` (date) Datum, pro které nás zajímají sazby
 
 + Request
     + Headers
@@ -711,16 +722,13 @@ Formát odpovědi:
 
         {"141":"Bonusy od banky","163":"Da\u0148ov\u00fd bonus","167":"Da\u0148ov\u00fd doklad","62":"Dopravn\u00e9\/ p\u0159epravn\u00e9","149":"Dotace organiza\u010dn\u00ed slo\u017eky","166":"Kurzov\u00e9 zisky","176":"Kurzov\u00fd rozd\u00edl zisk","99":"Myln\u00e1 p\u0159\u00edchoz\u00ed platba","159":"Pen\u00edze na cest\u011b - p\u0159\u00edjem","136":"P\u0159evod mezi bankovn\u00edmi \u00fa\u010dty","126":"P\u0159ijat\u00e9 z\u00e1lohy ","10":"Prodej majetku","30":"Prodej materi\u00e1lu","7":"Prodej slu\u017eby","130":"Prodej slu\u017eby - extern\u00ed servis","171":"Prodej slu\u017eby - lokalizace","172":"Prodej slu\u017eby - marketing","142":"Prodej slu\u017eby - n\u00e1jem","170":"Prodej slu\u017eby - p\u0159eklady","144":"Prodej slu\u017eby - pron\u00e1jem zemn\u00edho stroje","131":"Prodej slu\u017eby - servis za\u0159\u00edzen\u00ed","173":"Prodej slu\u017eby - v\u00fduka","8":"Prodej v\u00fdrobky","3":"Prodej zbo\u017e\u00ed","168":"Smluvn\u00ed pokuty a \u00faroky z prodlen\u00ed","12":"\u00dahrada faktury vydan\u00e9","153":"\u00dahrada pohled\u00e1vky za spole\u010dn\u00edkem","187":"\u00dahrada z\u00e1lohov\u00e9 faktury vydan\u00e9","31":"\u00darok","1":"\u00darok z bankovn\u00edho \u00fa\u010dtu","162":"Vklad fyzick\u00e9 osoby do podnik\u00e1n\u00ed","134":"Vklad spole\u010dn\u00edka spole\u010dnosti","140":"Vr\u00e1cen\u00ed DPH finan\u010dn\u00edm \u00fa\u0159adem","146":"V\u00fdb\u011br z banky na pokladnu","132":"Vy\u00fa\u010dtov\u00e1n\u00ed odvodu hotovosti z pokladny","38":"Zaokrouhlen\u00ed ","139":"Zv\u00fd\u0161en\u00ed z\u00e1kladn\u00edho kapit\u00e1lu"}
 
-## Typy DPH [/vat_type?doctype={doctype}]
+## Typy DPH [/vat_type{?doctype}]
 <a name="typy_dph"></a>
 ### Seznam typů DPH [GET]
 Odpověd obsahuje pole dostupných typů DPH v závislosti na parametru `doctype`.
 
-Formát odpovědi:
-`{"id": "popis"}`
-
 + Parameters
-    + doctype (string) ... Typ dokladu. Pro seznam dostupných hodnot si přejděte na [Typy dokladů](#typy_dokladu)
+    + doctype: `FV` (string) Typ dokladu. Pro seznam dostupných hodnot si přejděte na [Typy dokladů](#typy_dokladu)
 
 + Request
     + Headers

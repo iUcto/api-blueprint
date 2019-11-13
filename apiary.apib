@@ -554,9 +554,9 @@ Seznam zálohových faktur vydaných.
     + Attributes (object)
         - _link (object)
             - self (object)
-                - href: /1.1/invoice_issued (required)
+                - href: /1.1/proforma_invoice_issued (required)
         - _embedded (object)
-            - `invoice_issued` (array[`PROFORMA_INVOICE_ISSUED_LIST`], required) - Pole dostupných vydaných zálohových faktur
+            - `proforma_invoice_issued` (array[`PROFORMA_INVOICE_ISSUED_LIST`], required) - Pole dostupných vydaných zálohových faktur
 
 ### Detail faktury [GET /proforma_invoice_issued/{id}]
 
@@ -574,9 +574,9 @@ Podrobné inforamce k zálohové faktuře vydané.
     + Attributes (object)
         - _link (object)
             - self (object)
-                - href: /1.1/invoice_issued/123 (required)
+                - href: /1.1/proforma_invoice_issued/123 (required)
         - _embedded (object)
-            - `invoice_issued` (PROFORMA_INVOICE_ISSUED_GET_DETAIL, required) - Detail faktury
+            - `proforma_invoice_issued` (PROFORMA_INVOICE_ISSUED_GET_DETAIL, required) - Detail faktury
             
 ### Vytvoření faktury [POST /proforma_invoice_issued]
 
@@ -594,9 +594,9 @@ Vytvoření zálohové faktury vydané.
     + Attributes (object)
         - _link (object)
             - self (object)
-                - href: /1.1/invoice_issued/123 (required)
+                - href: /1.1/proforma_invoice_issued/123 (required)
         - _embedded (object)
-            - `invoice_issued` (PROFORMA_INVOICE_ISSUED_GET_DETAIL, required) - Detail faktury
+            - `proforma_invoice_issued` (PROFORMA_INVOICE_ISSUED_GET_DETAIL, required) - Detail faktury
             
 ### Editace faktury [PUT /proforma_invoice_issued/{id}]
 
@@ -617,9 +617,9 @@ Editace zálohové faktury vydané.
     + Attributes (object)
         - _link (object)
             - self (object)
-                - href: /1.1/invoice_issued/123 (required)
+                - href: /1.1/proforma_invoice_issued/123 (required)
         - _embedded (object)
-            - `invoice_issued` (PROFORMA_INVOICE_ISSUED_GET_DETAIL, required) - Detail faktury
+            - `proforma_invoice_issued` (PROFORMA_INVOICE_ISSUED_GET_DETAIL, required) - Detail faktury
 
 ### Smazání zálohové faktury [DELETE /proforma_invoice_issued/{id}]
 
@@ -642,10 +642,199 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
 ## Group Opravné daňové doklady [/creditnote_issued]
 
 # Group Doklady přijaté
-## Group Faktury přijaté [/invoice_received]
-<!--
-## Group Zálohové faktury přijaté [/proforma_invoice_received]
--->
+## Faktury přijafé [/invoice_received]
+
+### Seznam faktur [GET /invoice_received]
+
+Seznam faktur vydaných.
+            
++ Request
+    + Headers
+    
+        X-Auth-Key: api-key
+    
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/invoice_received (required)
+        - _embedded (object)
+            - `invoice_received` (array[`INVOICE_RECEIVED_LIST`], required) - Pole dostupných přijatých faktur
+
+### Detail faktury [GET /invoice_received/{id}]
+
+Podrobné inforamce k faktuře přidané.
+
++ Parameters
+    + id: 123 (number, required)
+        
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+            
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/invoice_received/123 (required)
+        - _embedded (object)
+            - `invoice_received` (`INVOICE_RECEIVED_GET_DETAIL`, required) - Detail faktury
+
+### Vytvoření faktury [POST /invoice_received]
+
+Vytvoření faktury přijaté.
+
++ Request
+    + Headers
+
+        X-Auth-Key: api-key
+        Content-Type: application/json
+            
+    + Attributes (`INVOICE_RECEIVED_DETAIL`)
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/invoice_received/123 (required)
+        - _embedded (object)
+            - `invoice_received` (INVOICE_RECEIVED_GET_DETAIL, required) - Detail faktury
+            
+### Editace faktury [PUT /invoice_received/{id}]
+
+Editace faktury přijaté.
+
++ Parameters
+    + id: 123 (number, required)
+    
++ Request
+    + Headers
+
+        X-Auth-Key: api-key
+        Content-Type: application/json
+            
+    + Attributes (`INVOICE_RECEIVED_DETAIL`)
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/invoice_received/123 (required)
+        - _embedded (object)
+            - `invoice_received` (INVOICE_RECEIVED_GET_DETAIL, required) - Detail faktury
+
+### Smazání faktury [DELETE /invoice_received/{id}]
+
+Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nasmaže.
+
++ Parameters
+    + id: 123 (number, required)
+    
++ Request
+    + Headers
+
+        X-Auth-Key: api-key    
+        
++ Response 204
+
+## Zálohové faktury přijaté [/proforma_invoice_received]
+
+### Seznam faktur [GET /proforma_invoice_received]
+
+Seznam zálohových faktur přijatých.
+            
++ Request
+    + Headers
+    
+        X-Auth-Key: api-key
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/proforma_invoice_received (required)
+        - _embedded (object)
+            - `proforma_invoice_received` (array[`PROFORMA_INVOICE_RECEIVED_LIST`], required) - Pole dostupných přijatých zálohových faktur
+
+### Detail faktury [GET /proforma_invoice_received/{id}]
+
+Podrobné inforamce k zálohové faktuře.
+
++ Parameters
+    + id: 123 (number, required)
+        
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/proforma_invoice_received/123 (required)
+        - _embedded (object)
+            - `proforma_invoice_received` (PROFORMA_INVOICE_RECEIVED_GET_DETAIL, required) - Detail faktury
+            
+### Vytvoření faktury [POST /proforma_invoice_received]
+
+Vytvoření zálohové faktury přijaté.
+
++ Request
+    + Headers
+
+        X-Auth-Key: api-key
+        Content-Type: application/json
+            
+    + Attributes (`INVOICE_RECEIVED_DETAIL`)
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/proforma_invoice_received/123 (required)
+        - _embedded (object)
+            - `proforma_invoice_received` (PROFORMA_INVOICE_RECEIVED_GET_DETAIL, required) - Detail faktury
+            
+### Editace faktury [PUT /proforma_invoice_received/{id}]
+
+Editace zálohové faktury přijaté.
+
++ Parameters
+    + id: 123 (number, required)
+    
++ Request
+    + Headers
+
+        X-Auth-Key: api-key
+        Content-Type: application/json
+            
+    + Attributes (`INVOICE_RECEIVED_DETAIL`)
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.1/proforma_invoice_received/123 (required)
+        - _embedded (object)
+            - `proforma_invoice_received` (PROFORMA_INVOICE_RECEIVED_GET_DETAIL, required) - Detail faktury
+
+### Smazání zálohové faktury [DELETE /proforma_invoice_received/{id}]
+
+Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nasmaže.
+
++ Parameters
+    + id: 123 (number, required)
+    
++ Request
+    + Headers
+
+        X-Auth-Key: api-key    
+        
++ Response 204
 
 ## Group Objednávky přijaté [/order_received]
 <!--
@@ -1148,6 +1337,41 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - Include `CUSTOMER_BASE`
 - `vat_payer`: `false` (boolean, required) - Příznak plátce DPH
 
+## `SUPPLIER_LIST` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/supplier/123 (required)
+- id: 123 (number, required) - ID dodavatele
+- name: `Jan Novák` (string, required) - Jméno dodavatele
+- comid: `00685776` (string, optional) - IČO
+- vatid: `CZ00685776` (string, optional) - DIČ
+- vat_payer: `false` (boolean, required) - Příznak plátce DPH
+- email: `novak.jan@iucto.cz` (string, optional) - Email
+- supplier_group_id: 123 (number, optional) - ID skupiny dodavatelů
+
+## `SUPPLIER_DETAIL` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/supplier/123 (required)
+- id: 123 (number, required) - ID dodavatele
+- name: `Jan Novák` (string, required) - Jméno dodavatele
+- name_display: `Jan Novák` (string, required) - Zobrazované jméno
+- comid: `00685776` (string, optional) - IČO
+- vatid: `CZ00685776` (string, optional) - DIČ
+- vat_payer: `false` (boolean, required) - Příznak plátce DPH
+- email: `novak.jan@iucto.cz` (string, optional) - Email
+- phone: `2111555` (string, optional) - Telefon
+- cellphone: `777111222333` (string, optional) - Mobil
+- www: `www.domena.cz` (string, optional) - WWW
+- address (ADDRESS, required) - Adresa
+- note: `Poznámka` (string, optional) - Poznámka
+- account_number1: `123456789/0801` (string, optional) - Číslo účtu 1
+- account_number2: `123456789/0802` (string, optional) - Číslo účtu 2
+- account_number3: `123456789/0803` (string, optional) - Číslo účtu 3
+- account_number4: `123456789/0804` (string, optional) - Číslo účtu 4
+- supplier_group_id: 123 (number, optional) - ID skupiny dodavatelů
 
 ## `CUSTOMER_DETAIL` (object)
 ### Properties
@@ -1203,6 +1427,36 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - eet: `false` (boolean) - Odesláno do EET
 - proforma_invoice: (array[`PROFORMA_INVOICE_ID`], optional) - Pole ID zálohových faktur
 
+## `INVOICE_RECEIVED_LIST` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/invoice_received/123 (required)
+- id: `13290` (number) - ID faktury
+- Include `INVOICE_ISSUED_BASE`
+- external_code: `20140001` (string, optional) - Číslo dokladu
+- price_inc_vat: `50` (number) - Cena
+- to_be_paid: `50` (number) - Zaplaceno
+- `supplier`: (array[`SUPPLIER_LIST`], required) - Pole dodavatelů
+- order_id: `13290` (number) - ID objednávky
+- accounted: `true` (boolean) - Zaúčtováno 
+- deleted: `false` (boolean) - Smazáno
+- proforma_invoice: (array[`PROFORMA_INVOICE_ID`], optional) - Pole ID zálohových faktur
+
+## `PROFORMA_INVOICE_RECEIVED_LIST` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/invoice_received/123 (required)
+- id: `13290` (number) - ID faktury
+- Include `INVOICE_ISSUED_BASE`
+- external_code: `20140001` (string, optional) - Číslo dokladu
+- price_inc_vat: `50` (number) - Cena
+- to_be_paid: `50` (number) - Zaplaceno
+- to_be_invoiced: `50` (number) - Zbýva doplatit
+- `supplier`: (array[`SUPPLIER_LIST`], required) - Pole dodavatelů
+- deleted: `false` (boolean) - Smazáno
+
 ## `PROFORMA_INVOICE_ISSUED_LIST` (object)
 ### Properties
 - _link (object)
@@ -1227,9 +1481,30 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - customer_bank_account: `null`
 - `payment_type`: (`PAYMENT_DIRECTION`, required) - [**Platební metody**](#metody_plateb)
 - `bank_account`: (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bank_account)
-- date_vat_prev: `null`
-- description: `null`
-- rounding_type: `none`
+- date_vat_prev: `2019-05-05` (string, optional) - Datum předchozí sazby DPH
+- description: `Popis` (string, optional) - Poznámka
+- rounding_type: `none` (string, optional) - [**Způsob zaokrouhlení**](#zaokrouhleni)
+- items: (array[`INVOICE_ITEMS_DETAIL`], required) - Pole položek
+- accounted: `true` (boolean) - Zaúčtováno 
+- deleted: `false` (boolean) - Smazáno
+- business_premises: `null`
+- `eet_status`: (object[`EET_STATUS_DETAIL`], required) - EET detail
+- order_id: `null`
+
+## `INVOICE_RECEIVED_DETAIL` (object)
+- Include `INVOICE_ISSUED_BASE`
+- price: `50` (number) - Cena
+- price_czk: `50` (number) - Cena v CZK
+- price_inc_vat: `50` (number) - Cena celkem
+- price_inc_vat_czk: `50` (number) - Cena celkem v CZK
+- to_be_paid: `50` (number) - Zaplaceno
+- customer_id: `1621` (number, required) - [Zákazník](#zakaznici)
+- customer_bank_account: `null`
+- `payment_type`: (`PAYMENT_DIRECTION`, required) - [**Platební metody**](#metody_plateb)
+- `bank_account`: (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bank_account)
+- date_vat_prev: `2019-05-05` (string, optional) - Datum předchozí sazby DPH
+- description: `Popis` (string, optional) - Poznámka
+- rounding_type: `none` (string, optional) - [**Způsob zaokrouhlení**](#zaokrouhleni)
 - items: (array[`INVOICE_ITEMS_DETAIL`], required) - Pole položek
 - accounted: `true` (boolean) - Zaúčtováno 
 - deleted: `false` (boolean) - Smazáno
@@ -1248,9 +1523,27 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - customer_bank_account: `null`
 - `payment_type`: (`PAYMENT_DIRECTION`, required) - [**Platební metody**](#metody_plateb)
 - `bank_account`: (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bank_account)
-- date_vat_prev: `null`
-- description: `null`
-- rounding_type: `none`
+- date_vat_prev: `2019-05-05` (string, optional) - Datum předchozí sazby DPH
+- description: `Popis` (string, optional) - Poznámka
+- rounding_type: `none` (string, optional) - [**Způsob zaokrouhlení**](#zaokrouhleni)
+- items: (array[`INVOICE_ITEMS_DETAIL`], required) - Pole položek
+- deleted: `false` (boolean) - Smazáno
+- to_be_invoiced: `50` (number) - Zbývá odečíst
+
+## `PROFORMA_INVOICE_RECEIVED_DETAIL` (object)
+- Include `INVOICE_ISSUED_BASE`
+- price: `50` (number) - Cena
+- price_czk: `50` (number) - Cena v CZK
+- price_inc_vat: `50` (number) - Cena celkem
+- price_inc_vat_czk: `50` (number) - Cena celkem v CZK
+- to_be_paid: `50` (number) - Zaplaceno
+- customer_id: `1621` (number, required) - [Zákazník](#zakaznici)
+- customer_bank_account: `null`
+- `payment_type`: (`PAYMENT_DIRECTION`, required) - [**Platební metody**](#metody_plateb)
+- `bank_account`: (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bank_account)
+- date_vat_prev: `2019-05-05` (string, optional) - Datum předchozí sazby DPH
+- description: `Popis` (string, optional) - Poznámka
+- rounding_type: `none` (string, optional) - [**Způsob zaokrouhlení**](#zaokrouhleni)
 - items: (array[`INVOICE_ITEMS_DETAIL`], required) - Pole položek
 - deleted: `false` (boolean) - Smazáno
 - to_be_invoiced: `50` (number) - Zbývá odečíst
@@ -1265,15 +1558,49 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - `customer`: (array[`CUSTOMER_DETAIL`], required) - Pole zákazníků
 - Include `INVOICE_ISSUED_DETAIL`
 
+## `INVOICE_RECEIVED_GET_DETAIL` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/invoice_received/123 (required)
+- id: `13290` (number) - ID faktury
+- Include `INVOICE_ISSUED_BASE`
+- external_code: `20140001` (string, optional) - Číslo dokladu
+- price: `50` (number) - Cena
+- price_czk: `50` (number) - Cena v korunách
+- price_inc_vat: `50` (number) - Cena včetně DPH
+- price_inc_vat_czk: `50` (number) - Cena včetně DPH v korunách
+- to_be_paid: `50` (number) - Zaplaceno
+- `supplier`: (array[`SUPPLIER_DETAIL`], required) - Pole dodavatelů
+- order_id: `13290` (number) - ID objednávky
+- `payment_type`: (`PAYMENT_DIRECTION`, required) - [**Platební metody**](#metody_plateb)
+- `bank_account`: (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bank_account)
+- date_vat_prev: `2019-05-05` (string, optional) - Datum předchozí sazby DPH
+- description: `Popis` (string, optional) - Poznámka
+- rounding_type: `none` (string, optional) - [**Způsob zaokrouhlení**](#zaokrouhleni)
+- items: (array[`INVOICE_ITEMS_DETAIL`], required) - Pole položek
+- deleted: `false` (boolean) - Smazáno
+- proforma_invoice: (array[`PROFORMA_INVOICE_ID`], optional) - Pole ID zálohových faktur
+
 ## `PROFORMA_INVOICE_ISSUED_GET_DETAIL` (object)
 ### Properties
 - _link (object)
     - self (object)
-        - href: /1.1/invoice_issued/123 (required)
+        - href: /1.1/proforma_invoice_issued/123 (required)
 - id: `13290` (number) - ID faktury
 - Include `INVOICE_ISSUED_BASE`
 - `customer`: (array[`CUSTOMER_DETAIL`], required) - Pole zákazníků
 - Include `PROFORMA_INVOICE_ISSUED_DETAIL`
+
+## `PROFORMA_INVOICE_RECEIVED_GET_DETAIL` (object)
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.1/proforma_received_issued/123 (required)
+- id: `13290` (number) - ID faktury
+- Include `INVOICE_ISSUED_BASE`
+- `supplier`: (array[`SUPPLIER_DETAIL`], required) - Pole dodavatelů
+- Include `PROFORMA_INVOICE_RECEIVED_DETAIL`
 
 ## `INVOICE_ITEMS_DETAIL` (object)
 ### Properties
@@ -1301,8 +1628,8 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - _link (object)
     - self (object)
         - href: /1.1/eet_status/
-- id: `null` (number) - ID
-- status: `null`
-- fik: `null`
-- bkp: `null`
-- pkp: `null`
+- id: `1` (number) - ID
+- status: `1` (string) - Status
+- fik: `123-222` (string) - FIK
+- bkp: `123-222` (string) - BKP
+- pkp: `123-222` (string) - PKP

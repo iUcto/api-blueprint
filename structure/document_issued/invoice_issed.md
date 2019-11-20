@@ -1,1 +1,1 @@
-:[Faktury vydané](invoice_issed.md)
+## Faktury vydané [/invoice_issued]

@@ -103,11 +103,9 @@
 
 ## Střediska [/department]
 <a name="strediska"></a>
-### Seznam středisek [GET]
 
 ## Zakázky [/contract]
 <a name="zakazky"></a>
-### Seznam zakázek [GET]
 
 ## Provozovny [/business_premises]
 <a name="business_premises"></a>

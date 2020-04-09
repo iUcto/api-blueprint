@@ -108,6 +108,19 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 | OP  | [Objednávky přijaté](#objednavky-prijate)     |
 | OV  | [Objednávky vydané](#objednavky-vydane)       |
 
+# Přehled změn
+
+## 10.04.2020
+- invoice_issued
+  * datum DUZP je povinné pouze pokud je na dokladu položka se sazbou DPH
+  * nové pole `reminders` pro nastavení upomínek
+
+- payment_received
+  * datum DUZP je povinné pouze pokud je na dokladu položka se sazbou DPH
+
+- proforma_invoice_received
+  * datum DUZP je povinné pouze pokud je na dokladu položka se sazbou DPH
+
 # Group Seznamy
 ## Měny [/currency]
 <a name="currency"></a>
@@ -969,6 +982,11 @@ Pro připojení objednávky k fakturě, stačí přidat ID objednávky do promě
 K faktuře vydané lze připojit několik zálohových faktur předáním pole s jejich ID v proměnné `proforma_invoice`.
 
 
+**Nastavení upomínek**
+
+Maximálně lze nastavit čtyři upomínky.
+Datum splatnosti musí být před, nebo v den upomínky.
+
 **EET**
 
 Přidání EET k faktuře lze dvěmy způsoby.
@@ -1663,7 +1681,7 @@ Vytvoří nový doklad, odpověd obsahuje detail dokladu.
 Povinné parametry dokladu:
 
     date
-    date_vat
+    date_vat (pokud existuje položka s DPH)
     currency
     customer_id nebo supplier_id
     payment_type
@@ -1817,7 +1835,7 @@ Vytvoří nový doklad, odpověd obsahuje detail dokladu.
 
 Povinné parametry dokladu:
  - date
- - date_vat
+ - date_vat (pokud existuje položka s DPH)
  - currency
  - customer_id
  - payment_type
@@ -2597,7 +2615,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - `sequence_code`: `FV20140001` (string, optional) - Číslo dokladu
 - `variable_symbol`: `20140001` (string, optional) - Variabilní symbol
 - date: `2014-07-12` (date, required) - [**Date**](#data_types) - Datum vystavení
-- `date_vat`: `2014-07-12` (date, required) - [**Date**](#data_types) - Datum zdanitelného plnění (nepovinné u neplátce DPH)
+- `date_vat`: `2014-07-12` (date, optional) - [**Date**](#data_types) - Datum zdanitelného plnění (povinné, pokud existuje položa s DPH)
 - `maturity_date`: `2014-08-12` (date, required) - [**Date**](#data_types) - Datum splatnosti
 - currency: `CZK` (enum, sample, required) - [**Měna**](#currency)
 
@@ -2621,6 +2639,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - `business_premises` (`BUSINESS_PREMISES`, optional)  - [**Provozovna**](#business_premises)
 - `eet_status` (`EET_STATUS_DETAIL`, required) - EET detail
 - `order_id`: `13290` (number, optional) - ID objednávky
+- `reminders`: `2014-08-12`, `2014-08-19` (array[string], optional) - Seznam datumů pro odeslání upomínek
 
 ## `INVOICE_ISSUED_GET_DETAIL` (object)
 ### Properties
@@ -2702,6 +2721,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
             - `business_premises_id` (number, required)  - ID [**provozovny**](#business_premises)
 - `order_id`: `13290` (number, optional) - ID objednávky
 - `proforma_invoice`: 45, 67 (array[number], optional) - ID připojených zálohových faktur
+- `reminders`: `2014-08-12`, `2014-08-19` (array[string], optional) - Seznam datumů pro odeslání upomínek
 
 
 

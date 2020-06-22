@@ -122,7 +122,7 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 
 # Přehled změn
 
-## v2.7
+## 22.06.2020
 - bank_transaction
     * zaúčtování pohyb a vytvoření platbu
 
@@ -1402,7 +1402,11 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
 ## Faktury přijaté [/invoice_received]
 <a name="faktury-prijate"/>
 
-### Seznam faktur přijatých [GET]
+### Seznam faktur přijatých [GET /invoice_received{?page,pageSize}]
++ Parameters
+    + page: `1` (number, optional) - Číslo stránky
+    + pageSize: `50` (number, optional) - Počet záznamů na stránku
+
 + Request
     + Headers
 
@@ -1415,6 +1419,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
                 - href: /1.1/invoice_received (required)
         - _embedded (object, required)
             - `invoice_received` (array[`INVOICE_RECEIVED_LIST`], required) - Pole dostupných přijatých faktur
+        - Include (`PAGING`, optional) - Stránkování, pouze pokud je nastaveno v parametru dotazu
 
 ### Detail faktury přijaté [GET /invoice_received/{id}]
 + Parameters

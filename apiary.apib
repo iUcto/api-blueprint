@@ -974,6 +974,30 @@ Vrátí binární data PDF souboru pro tisk nebo uložení do souboru.
 
 + Response 200 (application/pdf)
 
+### Vytvoření úhrady [GET /proforma_invoice_issued/{id}/pay]
+
+Automatické vytvoření platby pro vybranou zálohovou fakturu.
+
+Vytvoří se plná úhrada dokladu.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
+    + Attributes (`PROFORMA_INVOICE_ISSUED_PAY`)
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.1/payment_received/123 (required)
+        - _embedded (object, required)
+            - `paymnet_received` (`PAYMENT_RECEIVED_DETAIL`, required) - Detail vytvořené platby
+
 ### Smazání zálohové faktury vydané [DELETE /proforma_invoice_issued/{id}]
 
 Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
@@ -2984,6 +3008,12 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - Include `PROFORMA_INVOICE_ISSUED_DETAIL_WRITABLE`
 - Include `DOCUMENT_ISSUED_CREATE`
 
+## `PROFORMA_INVOICE_ISSUED_PAY` (object)
+### Properties
+- `date`: `2020-07-01` (date, required) - [**Date**](#data-types) - Datum úhrady
+- One Of
+    - `bank_account`: `465` (number, optional) - [**Bankovní účet**](#bankovni-ucty)
+    - `cash_register`: `321` (number, optional) - [**Pokladna**](#pokladny)
 
 
 ## `INVOICE_ISSUED_LIST_READONLY` (object)

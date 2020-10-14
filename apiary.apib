@@ -14,7 +14,7 @@ API umožnuje práci s různými typy dokladů pomocí HTTP požadavků zasílan
 
 Veškerá komunikace probíhá pomocí protokolu HTTPS.
 
-Odpovědi serveru jsou ve formátu [HAL+JSON](http://stateless.co/hal_specification.html).
+Odpovědi serveru jsou ve formátu [HAL+JSON](https://en.wikipedia.org/wiki/Hypertext_Application_Language).
 Tělo požadavku v případě POST a PUT musí být ve formátu JSON.
 
 <a name="http-pozadavky"/>
@@ -71,7 +71,7 @@ Parametrem této hlavička je přístupoví klíč.
 
 Ke každé firmě, ke které máte přístup se generuje samostatný klíč.
 
-![Vygenerování klíče](https://raw.githubusercontent.com/PavelMaca/iUcto-API/master/images/key_generation.PNG)
+![Vygenerování klíče](https://i.imgur.com/CoRy8im.png)
 
 Uživatel musí mít v nastavené správcem firmy oprávnění pro přístup přes API (výchozí stav je povolen).
 Při komunikaci prostřednictvím API má uživatel stejná oprávnění jako u webového rozhraní.
@@ -126,6 +126,14 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 | UD   | Uzávěrkový doklad                                     |
 
 # Přehled změn
+
+## 12.10.2020
+- bank_transaction
+  * možnost filtrovat záznamy podle data
+
+- webooky
+  * vytvoření, editace, smazání dokladu
+  * úhrada dokladu
 
 ## 21.9.2020
 ### Nová verze API 1.2
@@ -2060,7 +2068,7 @@ Umožňuje automatické spárování účetní dokladů s pohyby na bankovních 
 Po vložení nového pohybu se systém pokusí automaticky pohyb spárovat s existující fakturou.
 
 
-### Seznam bankovních pohybů [GET /bank_transaction{?page,pageSize,payment_type,status,price_from,price_to,currency,variable_symbol,constant_symbol,specific_symbol,bank_account,bank_account_contraparty}]
+### Seznam bankovních pohybů [GET /bank_transaction{?page,pageSize,payment_type,status,price_from,price_to,currency,variable_symbol,constant_symbol,specific_symbol,bank_account,bank_account_contraparty,date_payment_from,date_payment_to}]
 
 Seznam bankovních pohybů, které jsou již importované v systému.
 
@@ -2077,7 +2085,9 @@ Seznam bankovních pohybů, které jsou již importované v systému.
     + specific_symbol: `M4324` (string, optional) - Specifický symbol
     + bank_account: `12` (number, optional) - ID bankovního účtu
     + bank_account_contraparty: `233445453/5500` (string, optional) - Bankovní účet protistrany
-
+    + date_payment_from: `2019-01-01` (date, optional) - Datum platby OD
+    + date_payment_to: `2019-02-01` (date, optional) - Datum platby DO
+    
 + Request
     + Headers
 
@@ -2870,6 +2880,30 @@ Pohyb lze vytvořit dvěma způsby (viz. příklady požadavků).
         - _embedded (object, required)
             - `stock_movement` (`STOCK_MOVEMENT_DETAIL_REAL`, required) - Detail
 
+# Group Webhooky
+
+Nastavení webhooků provede v aplikaci `Nastavení -> Nastavení API -> Webhooky`.
+
+
+## Změna dokladu [GET /your.domain/update/url]
+URL je pouze ukázková, systém volá URL nastavenou pro váš konkrétní webhook.
+
++ Request
+    + Attributes (`WEBHOOK_BASIC_ACTION`)
+
++ Response 200
+
+
+## Úhrada faktury [GET /your.domain/pay/url]
+URL je pouze ukázková, systém volá URL nastavenou pro váš konkrétní webhook.
+
+Aktuálně jsou podporovány pouze FV a FP.
+
++ Request
+    + Attributes (`WEBHOOK_PAYMENT`)
+
++ Response 200
+
 
 
 # Data Structures
@@ -3185,7 +3219,7 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - `external_code`: `CC123` (string, optional) - Externí ID
 - phone: `+420123123123` (string, optional) - Telefon
 - cellphone: `+420123123123` (string, optional) - Mobil
-- www: `http://www.iucto.cz` (string, optional) - WWW
+- www: `https://www.iucto.cz` (string, optional) - WWW
 - `usual_maturity`: `30` (number, required) - Obvyklá splatnost ve dnech
 - `preferred_payment_method` (`PREFERRED_PAYMENT_METHOD_ENUM`, required) - [Preferovaná metoda platby](#preferred-payment-method)
 - `invoice_language` (`INVOICE_LANG`, required) - Jazyk faktury
@@ -3264,7 +3298,7 @@ Seznam dostupných účetních skupin zákazníků.
 - `external_code`: `CC123` (string, optional) - Externí ID
 - phone: `+420123123123` (string, optional) - Telefon
 - cellphone: `+420123123123` (string, optional) - Mobil
-- www: `http://www.iucto.cz` (string, optional) - WWW
+- www: `https://www.iucto.cz` (string, optional) - WWW
 - address (`ADDRESS`, required) - Adresa
 - note: `Věrný dodavatel` (string, optional) - Poznámka
 - `account_number1`: `1230123/0100` (string, optional) - Číslo účtu 1
@@ -3419,7 +3453,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 Proměnné pouze pro čtení dostupné v seznamu
 ### Properties
 - Include `DOCUMENT_ISSUED_LIST_READONLY`
-- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zaplaceno
+- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zbývá uhradit
 - `to_be_invoiced`: `50` (price, required) - [**Price**](#data-types) - Zbývá odečíst
 
 ## `PROFORMA_INVOICE_ISSUED_LIST` (object)
@@ -3469,7 +3503,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 Proměnné pouze pro čtení dostupné v seznamu
 ### Properties
 - Include `DOCUMENT_ISSUED_LIST_READONLY`
-- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zaplaceno
+- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zbývá uhradit
 - accounted: `true` (boolean, required) - Zaúčtováno
 - `proforma_invoice` (array[`INVOICE_ISSUED_PROFORMA_ID`], optional) - Pole ID zálohových faktur
 - eet: `false` (boolean, required) - Odesláno do EET
@@ -3533,7 +3567,7 @@ Proměnné dostupné v detailu
 Proměnné pouze pro čtení dostupné v seznamu
 ### Properties
 - Include `DOCUMENT_ISSUED_LIST_READONLY`
-- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zaplaceno
+- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zbývá uhradit
 - accounted: `true` (boolean, required) - Zaúčtováno
 - eet: `false` (boolean, required) - Odesláno do EET
 
@@ -3648,7 +3682,7 @@ Proměnné pouze pro čtení dostupné v seznamu
 ### Properties
 - id: `13290` (number) - ID faktury
 - `price_inc_vat`: `50` (price, required) - [**Price**](#data-types) - Cena celkem
-- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zaplaceno
+- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zbývá uhradit
 - `deleted`: `false` (boolean) - Smazáno
 - `to_be_invoiced`: `50` (price, required) - [**Price**](#data-types) - Zbývá odečíst
 
@@ -3749,7 +3783,7 @@ Proměnné pouze pro čtení dostupné v seznamu
 ### Properties
 - id: `13290` (number) - ID faktury
 - `price_inc_vat`: `50` (price, required) - [**Price**](#data-types) - Cena celkem
-- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zaplaceno
+- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zbývá uhradit
 - `deleted`: `false` (boolean) - Smazáno
 - `accounted`: `false` (boolean) - Zaúčtováno
 - `proforma_invoice` (array[`INVOICE_RECEIVED_PROFORMA_ID`], optional) - Pole ID zálohových faktur
@@ -3826,7 +3860,7 @@ Proměnné pouze pro čtení dostupné v seznamu
 - `id`: `123` (number) - ID dokladu
 - `price_inc_vat`: `50` (price, required) - [**Price**](#data-types) - Cena celkem
 - `deleted`: `false` (boolean) - Smazáno
-- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zaplaceno
+- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zbývá uhradit
 - `accounted`: `true` (boolean, required) - Zaúčtováno
 
 ## `CREDITNOTE_RECEIVED_LIST_WRITABLE` (object)
@@ -4472,3 +4506,59 @@ Proměnné pouze pro zápis dostupné v detailu
 - Include `STOCK_MOVEMENT_DETAIL_READONLY`
 - Include `STOCK_MOVEMENT_DETAIL_WRITABLE`
 - `amount`: `95` (number) - Předchozí hodnota byla 5 kusů, bylo přidáno 95 do požadovaného 100 kusů na skladě
+
+## `WEBHOOK_BASIC_ACTION` (object)
+### Properties
+- action: `created`,`edited`,`deleted`  (enum, required)
+- One Of - Typ dokladu
+    - `invoice_received` (object, required)
+        - id: 4567 (number,required) - ID záznamu
+    - `invoice_issued` (object, required)
+        - id: 4567 (number,required) - ID záznamu
+    - `proforma_received` (object, required)
+        - id: 4567 (number,required) - ID záznamu
+    - `proforma_issued` (object, required)
+        - id: 4567 (number,required) - ID záznamu
+    - `creditnote_received` (object, required)
+        - id: 4567 (number,required) - ID záznamu
+    - `creditnote_issued` (object, required)
+        - id: 4567 (number,required) - ID záznamu
+    - `order_issued` (object, required)
+        - id: 4567 (number,required) - ID záznamu
+    - `order_received` (object, required)
+        - id: 4567 (number,required) - ID záznamu
+    - `payment_received` (object, required)
+        - id: 4567 (number,required) - ID záznamu
+    - `payment_issued` (object, required)
+        - id: 4567 (number,required) - ID záznamu
+- timestamp: `2020-09-23T11:23Z` (string, required) - Čas vytvoření ve formátu ISO8601
+
+
+## `WEBHOOK_PAYMENT` (object)
+### Properties
+- action: `paid` (string, required)
+- One Of 1 - Typ uhrazeného dokladu
+    - `invoice_received`
+        - id: `123` (number, required ) - ID dokladu
+        - currency: `EUR` (enum, sample, required) - [**Měna**](#currency)
+        - `price_inc_vat`: `100` (price, required) - [**Price**](#data-types) - Cena celkem v měně dokladu
+        - `price_inc_vat_czk`: `2650` (price, required) - [**Price**](#data-types) - Cena celkem v CZK
+        - `to_be_paid`: `24.5` (price, required) - [**Price**](#data-types) - Zbývá uhradit
+    - `invoice_issued`
+        - id: `123` (number, required ) - ID dokladu
+        - currency: `EUR` (enum, sample, required) - [**Měna**](#currency)
+        - `price_inc_vat`: `100` (price, required) - [**Price**](#data-types) - Cena celkem v měně dokladu
+        - `price_inc_vat_czk`: `2650` (price, required) - [**Price**](#data-types) - Cena celkem v CZK
+        - `to_be_paid`: `24.5` (price, required) - [**Price**](#data-types) - Zbývá uhradit
+- One Of 2 - Platba hradicí doklad
+    - `payment_issued`
+        - id: `123` (number, required ) - ID dokladu
+        - currency: `CZK` (enum, sample, required) - [**Měna**](#currency)
+        - `price_inc_vat`: `2000` (price, required) - [**Price**](#data-types) - Cena celkem v měně dokladu
+        - `price_inc_vat_czk`: `2000` (price, required) - [**Price**](#data-types) - Cena celkem v CZK
+    - `payment_received`
+        - id: `123` (number, required ) - ID dokladu
+        - currency: `CZK` (enum, sample, required) - [**Měna**](#currency)
+        - `price_inc_vat`: `2000` (price, required) - [**Price**](#data-types) - Cena celkem v měně dokladu
+        - `price_inc_vat_czk`: `2000` (price, required) - [**Price**](#data-types) - Cena celkem v CZK
+- timestamp: `2020-09-23T11:23Z` (string, required) - Čas vytvoření ve formátu ISO8601

@@ -2087,7 +2087,7 @@ Seznam bankovních pohybů, které jsou již importované v systému.
     + bank_account_contraparty: `233445453/5500` (string, optional) - Bankovní účet protistrany
     + date_payment_from: `2019-01-01` (date, optional) - Datum platby OD
     + date_payment_to: `2019-02-01` (date, optional) - Datum platby DO
-    
+
 + Request
     + Headers
 
@@ -2123,7 +2123,7 @@ Podrobné informace k pohybu, včetně spárovaných dokladů.
         - _embedded (object)
             - `bank_transaction` (BANK_STATEMENT_DETAIL, required) - Detail transakce
 
-### Import bankovního pohybu [POST /bank_transaction/{id}]
+### Import bankovního pohybu [POST /bank_transaction]
 
 Přenesení nového pohybu do systému.
 

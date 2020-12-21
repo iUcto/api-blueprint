@@ -127,6 +127,31 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 
 # Přehled změn
 
+## 21.12.2020
+### Změny ve verzi API 1.2
+  * všechny endpointy mají výchozí řazení sestupně dle ID
+
+### Změny ve všech verzích API
+- invoice_isseud
+  * možnost odeslání dokladu emailem pomocí endpointu `/invoice_issued/{id}/email`
+
+- proforma_invoice_isseud
+  * možnost odeslání dokladu emailem pomocí endpointu `/proforma_invoice_issued/{id}/email`
+
+- creditnote_issued
+  * odstranění parametru `currency_date`
+  * možnost odeslání dokladu emailem pomocí endpointu `/creditnote_issued/{id}/email`
+
+- creditnote_received
+  * odstranění parametru `currency_date`
+
+- customer
+  * `phone` a `cellphone` jsou dostupné v seznamu kontaktů
+
+- supplier
+  * `phone` a `cellphone` jsou dostupné v seznamu kontaktů
+
+
 ## 12.10.2020
 - bank_transaction
   * možnost filtrovat záznamy podle data
@@ -1089,6 +1114,27 @@ Vytvoří se plná úhrada dokladu.
         - _embedded (object, required)
             - `paymnet_received` (`PAYMENT_RECEIVED_DETAIL`, required) - Detail vytvořené platby
 
+### Odeslání dokladu emailem [POST /proforma_invoice_issued/{id}/email]
+
+Odeslání emailu s odkazem na doklad a PDF na vámi zvolenou adresu.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
+    + Attributes (`PROFORMA_INVOICE_ISSUED_EMAIL`)
+
+
++ Response 200 (application/json)
+    + Attributes (object)
+        - send: `true` (boolean, required)
+
+
+
 ### Smazání zálohové faktury vydané [DELETE /proforma_invoice_issued/{id}]
 
 Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
@@ -1248,6 +1294,24 @@ Vrátí binární data PDF souboru pro tisk nebo uložení do souboru.
 
 + Response 200 (application/pdf)
 
+### Odeslání dokladu emailem [POST /invoice_issued/{id}/email]
+
+Odeslání emailu s odkazem na doklad a PDF na vámi zvolenou adresu.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
+    + Attributes (`INVOICE_ISSUED_EMAIL`)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        - send: `true` (boolean, required)
+
 
 ### Smazání faktury vydané [DELETE /invoice_issued/{id}]
 
@@ -1381,6 +1445,24 @@ Nelze  editovat doklady s EET, použijte nový [**Opravný daňový doklad**](#o
         - _embedded (object, required)
             - `creditnote_issued` (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail dokladu
 
+
+### Odeslání dokladu emailem [POST /creditnote_issued/{id}/email]
+
+Odeslání emailu s odkazem na doklad a PDF na vámi zvolenou adresu.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
+    + Attributes (`CREDITNOTE_ISSUED_EMAIL`)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        - send: `true` (boolean, required)
 
 ### Smazání opravného dokladu [DELETE /creditnote_issued/{id}]
 Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
@@ -3211,24 +3293,28 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - name: `Jan Novák` (string, required) - Jméno zákazníka
 - comid: `00685776` (string, optional) - IČO
 - email: `novak.jan@example.org` (string, optional) - Email
+- phone: `+420123123123` (string, optional) - Telefon
+- cellphone: `+420123123123` (string, optional) - Mobil
 - `customer_group_id`: 78 (number, optional) - ID [skupiny zákazníků](#customer-group)
 
 ## `CUSTOMER_EXTRA` (object)
 ### Properties
-- name_display: `Jan Novák ml.` (string, optional) - Zobrazované jméno
+- `name_display`: `Jan Novák ml.` (string, optional) - Zobrazované jméno
 - `external_code`: `CC123` (string, optional) - Externí ID
-- phone: `+420123123123` (string, optional) - Telefon
-- cellphone: `+420123123123` (string, optional) - Mobil
-- www: `https://www.iucto.cz` (string, optional) - WWW
+- `phone`: `+420123123123` (string, optional) - Telefon
+- `cellphone`: `+420123123123` (string, optional) - Mobil
+- `www`: `http:s//www.iucto.cz` (string, optional) - WWW
 - `usual_maturity`: `30` (number, required) - Obvyklá splatnost ve dnech
 - `preferred_payment_method` (`PREFERRED_PAYMENT_METHOD_ENUM`, required) - [Preferovaná metoda platby](#preferred-payment-method)
 - `invoice_language` (`INVOICE_LANG`, required) - Jazyk faktury
-- address (`ADDRESS`, required) - Adresa
-- note: `Věrný zákazník` (string, optional) - Poznámka
-- `account_number1`: `1230123/0100` (string, optional) - Číslo účtu 1
-- `account_number2`: `null` (string, optional) - Číslo účtu 2
+- `address` (`ADDRESS`, required) - Adresa
+- `note`: `Věrný zákazník` (string, optional) - Poznámka
+- `account_number1`: `1234567890/0100` (string, optional) - Číslo účtu 1
+- `account_number2`: `1234-1234567890/4400` (string, optional) - Číslo účtu 2
 - `account_number3`: `null` (string, optional) - Číslo účtu 3
 - `account_number4`: `null` (string, optional) - Číslo účtu 4
+- `default_department_id`: `null` (number, optional) - ID výchozího střediska
+- `default_contract_id`: `null` (number, optional) - ID výchozí zakázky
 
 ## `CUSTOMER_LIST` (object)
 ### Properties
@@ -3290,21 +3376,25 @@ Seznam dostupných účetních skupin zákazníků.
 - name: `Jan Novák` (string, required) - Jméno dodavatele
 - comid: `00685776` (string, optional) - IČO
 - email: `novak.jan@example.org` (string, optional) - Email
+- phone: `+420123123123` (string, optional) - Telefon
+- cellphone: `+420123123123` (string, optional) - Mobil
 - `supplier_group_id`: 78 (number, optional) - ID [skupiny dodavatelů](#supplier-group)
 
 ## `SUPPLIER_EXTRA` (object)
 ### Properties
-- name_display: `Jan Novák ml.` (string, optional) - Zobrazované jméno
+- `name_display`: `Jan Novák ml.` (string, optional) - Zobrazované jméno
 - `external_code`: `CC123` (string, optional) - Externí ID
-- phone: `+420123123123` (string, optional) - Telefon
-- cellphone: `+420123123123` (string, optional) - Mobil
-- www: `https://www.iucto.cz` (string, optional) - WWW
-- address (`ADDRESS`, required) - Adresa
-- note: `Věrný dodavatel` (string, optional) - Poznámka
-- `account_number1`: `1230123/0100` (string, optional) - Číslo účtu 1
-- `account_number2`: `null` (string, optional) - Číslo účtu 2
+- `phone`: `+420123123123` (string, optional) - Telefon
+- `cellphone`: `+420123123123` (string, optional) - Mobil
+- `www`: `https://www.iucto.cz` (string, optional) - WWW
+- `address` (`ADDRESS`, required) - Adresa
+- `note`: `Věrný dodavatel` (string, optional) - Poznámka
+- `account_number1`: `1234567890/0100` (string, optional) - Číslo účtu 1
+- `account_number2`: `1234-1234567890/4400` (string, optional) - Číslo účtu 2
 - `account_number3`: `null` (string, optional) - Číslo účtu 3
 - `account_number4`: `null` (string, optional) - Číslo účtu 4
+- `default_department_id`: `null` (number, optional) - ID výchozího střediska
+- `default_contract_id`: `null` (number, optional) - ID výchozí zakázky
 
 ## `SUPPLIER_LIST` (object)
 ### Properties
@@ -3498,7 +3588,13 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
     - `bank_account`: `465` (number, optional) - [**Bankovní účet**](#bankovni-ucty)
     - `cash_register`: `321` (number, optional) - [**Pokladna**](#pokladny)
 
-
+## `PROFORMA_INVOICE_ISSUED_EMAIL` (object)
+Proměnné pouze pro vytvoření emailu
+### Properties
+- `message`: `Some message to send` (string, required) - Zpráva
+- `recipient`: `recipien1@example.org`,`recipien2@example.org` (array, required) - Příjemci emailu
+- `hidden_copy`: `no-reply@example.org` (array, optional) - Skrytí příjemci emailu
+- `attach_pdf`: `true` (boolean, optional) - Připojit PDF dokladu
 ## `INVOICE_ISSUED_LIST_READONLY` (object)
 Proměnné pouze pro čtení dostupné v seznamu
 ### Properties
@@ -3562,6 +3658,14 @@ Proměnné dostupné v detailu
 ### Properties
 - id: `123456` (number) - ID zálohové faktury
 
+## `INVOICE_ISSUED_EMAIL` (object)
+Proměnné pouze pro vytvoření emailu
+### Properties
+- `message`: `Some message to send` (string, required) - Zpráva
+- `recipient`: `recipien1@example.org`,`recipien2@example.org` (array, required) - Příjemci emailu
+- `hidden_copy`: `no-reply@example.org` (array, optional) - Skrytí příjemci emailu
+- `attach_pdf`: `true` (boolean, optional) - Připojit PDF dokladu
+- `attach_delivery_note_pdf`: `true` (boolean, optional) - Připojit PDF dodacího listu(předávacího protokolu)
 
 ## `CREDITNOTE_ISSUED_LIST_READONLY` (object)
 Proměnné pouze pro čtení dostupné v seznamu
@@ -3601,7 +3705,6 @@ Proměnné pouze pro zápis dostupné v detailu
 - Include `CREDITNOTE_ISSUED_LIST_WRITABLE`
 - Include `DOCUMENT_ISSUED_DETAIL_WRITABLE`
 - `business_premises` (`BUSINESS_PREMISES_LIST`, optional)  - [**Provozovna**](#business-premises)
-- `currency_date`: `2019-09-08` (date)
 
 ## `CREDITNOTE_ISSUED_DETAIL` (object)
 Proměnné dostupné v detailu
@@ -3622,6 +3725,14 @@ Proměnné dostupné v detailu
         - Properties
             - `eet`: true (boolean, optional) - Vygenerovat EET, pokud je nastaveno
             - `business_premises_id` (number, required)  - ID [**provozovny**](#business-premises)
+
+## `CREDITNOTE_ISSUED_EMAIL` (object)
+Proměnné pouze pro vytvoření emailu
+### Properties
+- `message`: `Some message to send` (string, required) - Zpráva
+- `recipient`: `recipien1@example.org`,`recipien2@example.org` (array, required) - Příjemci emailu
+- `hidden_copy`: `no-reply@example.org` (array, optional) - Skrytí příjemci emailu
+- `attach_pdf`: `true` (boolean, optional) - Připojit PDF dokladu
 
 ## `ORDER_ISSUED_LIST_READONLY` (object)
 Proměnné pouze pro čtení dostupné v seznamu
@@ -3902,7 +4013,6 @@ Proměnné pouze pro zápis dostupné v detailu
 - `date_vat_prev`: `2019-01-01` (date, optional) - [**Date**](#data-types) - Datum předchozí sazby DPH
 - `description`: `Popis` (string, optional) - Poznámka
 - `rounding_type` (`ROUNDING_TYPE_ENUM`, optional) - [**Způsob zaokrouhlení**](#zaokrouhleni)
-- `currency_date`: `2019-09-08` (date)
 
 ## `CREDITNOTE_RECEIVED_DETAIL` (object)
 Proměnné dostupné v detailu

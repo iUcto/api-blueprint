@@ -127,84 +127,115 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 
 # Přehled změn
 
-## 21.12.2020
+## 01.09.2021
+### Změny ve všech verzích API
+
+* Podpora pro režim One Stop Shop
+  * Doklady v režimu OSS lze přidávat a editovat pouze od API verze 1.2
+
+- invoice_issued
+    * přidán parametr `oss_mode` pro zapnutí režimu One Stop Shop na dokladu
+- creditnote_issued
+    * přidán parametr `oss_mode` pro zapnutí režimu One Stop Shop na dokladu
+- payment_received
+    * přidán parametr `oss_mode` pro zapnutí režimu One Stop Shop na dokladu
+
 ### Změny ve verzi API 1.2
-  * všechny endpointy mají výchozí řazení sestupně dle ID
+
+* Podpora pro režim One Stop Shop
+
+- vat_type
+    * přidán parametr `oss` pro načtení typů DPH v režimu OSS
+- vat_rates
+    * přidán parametr `country` pro získání seznamu sazeb DPH pro země EU
+
+## 21.12.2020
+
+### Změny ve verzi API 1.2
+
+* všechny endpointy mají výchozí řazení sestupně dle ID
 
 ### Změny ve všech verzích API
+
 - invoice_isseud
-  * možnost odeslání dokladu emailem pomocí endpointu `/invoice_issued/{id}/email`
+    * možnost odeslání dokladu emailem pomocí endpointu `/invoice_issued/{id}/email`
 
 - proforma_invoice_isseud
-  * možnost odeslání dokladu emailem pomocí endpointu `/proforma_invoice_issued/{id}/email`
+    * možnost odeslání dokladu emailem pomocí endpointu `/proforma_invoice_issued/{id}/email`
 
 - creditnote_issued
-  * odstranění parametru `currency_date`
-  * možnost odeslání dokladu emailem pomocí endpointu `/creditnote_issued/{id}/email`
+    * odstranění parametru `currency_date`
+    * možnost odeslání dokladu emailem pomocí endpointu `/creditnote_issued/{id}/email`
 
 - creditnote_received
-  * odstranění parametru `currency_date`
+    * odstranění parametru `currency_date`
 
 - customer
-  * `phone` a `cellphone` jsou dostupné v seznamu kontaktů
+    * `phone` a `cellphone` jsou dostupné v seznamu kontaktů
 
 - supplier
-  * `phone` a `cellphone` jsou dostupné v seznamu kontaktů
-
+    * `phone` a `cellphone` jsou dostupné v seznamu kontaktů
 
 ## 12.10.2020
+
 - bank_transaction
-  * možnost filtrovat záznamy podle data
+    * možnost filtrovat záznamy podle data
 
 - webooky
-  * vytvoření, editace, smazání dokladu
-  * úhrada dokladu
+    * vytvoření, editace, smazání dokladu
+    * úhrada dokladu
 
 ## 21.9.2020
+
 ### Nová verze API 1.2
-  * povinné stránkování u všech dokladů, plateb, bankovních transakcí, zákazníků, dodavatelů a EET záznamů
-  * povinný parametr `liquidation_amount` u plateb s vazbou na doklad v cizí měně
-  * připojení zálohvých faktur k `invoice_issued` přes parametr `proforma_invoices`
-  * Účetní deník `journal`
-  * Přímé zaúčtování `direct_accounting`
-  * Dobropisy přijaté `creditnote_received`
+
+* povinné stránkování u všech dokladů, plateb, bankovních transakcí, zákazníků, dodavatelů a EET záznamů
+* povinný parametr `liquidation_amount` u plateb s vazbou na doklad v cizí měně
+* připojení zálohvých faktur k `invoice_issued` přes parametr `proforma_invoices`
+* Účetní deník `journal`
+* Přímé zaúčtování `direct_accounting`
+* Dobropisy přijaté `creditnote_received`
 
 ### Změny ve všech verzích API
+
 - invoice_received
-  * parametr `bank_account` je povinný dle platební metody
+    * parametr `bank_account` je povinný dle platební metody
 
 - proforma_invoice_received
-  * parametr `bank_account` je povinný dle platební metody
+    * parametr `bank_account` je povinný dle platební metody
 
 - payment_issued
-  * `currency` není potřeba pro vytvoření platby, bude převzata z měny poklady, nebo bank. účtu
-  * `liquidation_amount` parametr pro zadání likvidační částky
+    * `currency` není potřeba pro vytvoření platby, bude převzata z měny poklady, nebo bank. účtu
+    * `liquidation_amount` parametr pro zadání likvidační částky
 
 - payment_received
-  * `currency` není potřeba pro vytvoření platby, bude převzata z měny poklady, nebo bank. účtu
-  * `liquidation_amount` parametr pro zadání likvidační částky
+    * `currency` není potřeba pro vytvoření platby, bude převzata z měny poklady, nebo bank. účtu
+    * `liquidation_amount` parametr pro zadání likvidační částky
 
 - customer
-  * `external_code` nový parametr jako externí identifikátor
+    * `external_code` nový parametr jako externí identifikátor
 
 - supplier
-  * `external_code` nový parametr jako externí identifikátor
+    * `external_code` nový parametr jako externí identifikátor
 
 ## 13.8.2020
+
 - doplnění filtrů ke všem dokladům, platbám a bankovním transakcím
 
 ## 26.6.2020
+
 - volitelné stránkování pro všechny endpointy s uživatelskými daty
 - nové endpointy pro práci s ceníkem a sklady
-  * price_list
-  * warehouse
-  * inventory
-  * stock_movement
+    * price_list
+    * warehouse
+    * inventory
+    * stock_movement
 
 - order_recieved
-  * přidání sloupce externí číslo objednávky
+    * přidání sloupce externí číslo objednávky
 
 ## 22.06.2020
+
 - bank_transaction
     * zaúčtování pohyby a vytvoření platby
 
@@ -212,15 +243,16 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
     * stažení PDF
 
 ## 10.04.2020
+
 - invoice_issued
-  * datum DUZP je povinné pouze pokud je na dokladu položka se sazbou DPH
-  * nové pole `reminders` pro nastavení upomínek
+    * datum DUZP je povinné pouze pokud je na dokladu položka se sazbou DPH
+    * nové pole `reminders` pro nastavení upomínek
 
 - payment_received
-  * datum DUZP je povinné pouze pokud je na dokladu položka se sazbou DPH
+    * datum DUZP je povinné pouze pokud je na dokladu položka se sazbou DPH
 
 - proforma_invoice_received
-  * datum DUZP je povinné pouze pokud je na dokladu položka se sazbou DPH
+    * datum DUZP je povinné pouze pokud je na dokladu položka se sazbou DPH
 
 # Group Seznamy
 
@@ -311,8 +343,7 @@ Seznam metod pro zaokrouhlování částek v dokladech.
         - _link (object)
             - self (object)
                 - href: /1.2/bank_account/123 (required)
-        - _embedded (object)
-            - `bank_account` (`BANK_ACCOUNT_DETAIL`, required) - Detail bankovního účtu
+        - Include (`BANK_ACCOUNT_DETAIL`, required) - Detail bankovního účtu
 
 ### Vytvoření bankovního účtu [POST /bank_account]
 
@@ -330,8 +361,7 @@ Výchozí [**Účet úč. osnovy**](#ucty-uc-osnovy) je 221.
         - _link (object)
             - self (object)
                 - href: /1.2/bank_account/123 (required)
-        - _embedded (object)
-            - `bank_account` (`BANK_ACCOUNT_DETAIL`, required) - Detail bankovního účtu
+        - Include (`BANK_ACCOUNT_DETAIL`, required) - Detail bankovního účtu
 
 
 
@@ -351,8 +381,7 @@ Výchozí [**Účet úč. osnovy**](#ucty-uc-osnovy) je 221.
         - _link (object)
             - self (object)
                 - href: /1.2/bank_account/123 (required)
-        - _embedded (object)
-            - `bank_account` (`BANK_ACCOUNT_DETAIL`, required) - Detail bankovního účtu
+        - Include (`BANK_ACCOUNT_DETAIL`, required) - Detail bankovního účtu
 
 ### Smazání bankovního účtu [DELETE /bank_account/{id}]
 
@@ -406,8 +435,7 @@ Smazat lze pouze bankovní účet bez žádné vazby na doklad.
         - _link (object)
             - self (object)
                 - href: /1.2/cash_register/123 (required)
-        - _embedded (object)
-            - `cash_register` (`CASH_REGISTER_DETAIL`, required) - Detail pokladny
+        - Include (`CASH_REGISTER_DETAIL`, required) - Detail pokladny
 
 ## Střediska [/department]
 <a name="strediska"></a>
@@ -448,8 +476,7 @@ Smazat lze pouze bankovní účet bez žádné vazby na doklad.
         - _link (object)
             - self (object)
                 - href: /1.2/department/475 (required)
-        - _embedded (object)
-            - `department` (`DEPARTMENT_DETAIL`, required) - Detail střediska
+        - Include (`DEPARTMENT_DETAIL`, required) - Detail střediska
 
 
 
@@ -466,8 +493,7 @@ Smazat lze pouze bankovní účet bez žádné vazby na doklad.
         - _link (object)
             - self (object)
                 - href: /1.2/department/475 (required)
-        - _embedded (object)
-            - `department` (`DEPARTMENT_DETAIL`, required) - Detail střediska
+        - Include (`DEPARTMENT_DETAIL`, required) - Detail střediska
 
 ### Editace střediska [PUT /department/{id}]
 + Parameters
@@ -485,8 +511,7 @@ Smazat lze pouze bankovní účet bez žádné vazby na doklad.
         - _link (object)
             - self (object)
                 - href: /1.2/department/475 (required)
-        - _embedded (object)
-            - `department` (`DEPARTMENT_DETAIL`, required) - Detail střediska
+        - Include (`DEPARTMENT_DETAIL`, required) - Detail střediska
 
 
 ### Smazání střediska [DELETE /department/{id}]
@@ -538,8 +563,7 @@ Pokusí se smazat vybrané středisko. Pokud je ovšem vázán na jiný záznam 
         - _link (object)
             - self (object)
                 - href: /1.2/contract/475 (required)
-        - _embedded (object)
-            - `contract` (`CONTRACT_DETAIL`, required) - Detail zakázky
+        - Include (`CONTRACT_DETAIL`, required) - Detail zakázky
 
 
 ### Vytvoření zakázky [POST /contract]
@@ -555,8 +579,7 @@ Pokusí se smazat vybrané středisko. Pokud je ovšem vázán na jiný záznam 
         - _link (object)
             - self (object)
                 - href: /1.2/contract/475 (required)
-        - _embedded (object)
-            - `contract` (`CONTRACT_DETAIL`, required) - Detail zakázky
+        - Include (`CONTRACT_DETAIL`, required) - Detail zakázky
 
 
 ### Editace zakázky [PUT /contract/{id}]
@@ -575,8 +598,7 @@ Pokusí se smazat vybrané středisko. Pokud je ovšem vázán na jiný záznam 
         - _link (object)
             - self (object)
                 - href: /1.2/contract/475 (required)
-        - _embedded (object)
-            - `contract` (`CONTRACT_DETAIL`, required) - Detail zakázky
+        - Include (`CONTRACT_DETAIL`, required) - Detail zakázky
 
 
 ### Smazání zakázky [DELETE /contract/{id}]
@@ -629,8 +651,7 @@ Pokusí se smazat vybranou zakázku. Pokud je ovšem vázán na jiný záznam (f
         - _link (object)
             - self (object)
                 - href: /1.2/business_premises/897 (required)
-        - _embedded (object)
-            - `business_premises` (`BUSINESS_PREMISES_DETAIL`, required) - Detail provozovny
+        - Include (`BUSINESS_PREMISES_DETAIL`, required) - Detail provozovny
 
 # Group Adresář
 
@@ -938,8 +959,7 @@ Výpis všech dostupných dokladů.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/order_received/123 (required)
-        - _embedded (object, required)
-            - `order_received` (`ORDER_RECEIVED_DETAIL`, required) - Detail dokladu
+        - Include (`ORDER_RECEIVED_DETAIL`, required) - Detail dokladu
 
 
 
@@ -957,8 +977,7 @@ Výpis všech dostupných dokladů.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/order_received/123 (required)
-        - _embedded (object, required)
-            - `order_received` (`ORDER_RECEIVED_DETAIL`, required) - Detail dokladu
+      - Include (`ORDER_RECEIVED_DETAIL`, required) - Detail dokladu
 
 
 ### Editace objednávky [PUT /order_received/{id}]
@@ -977,8 +996,7 @@ Výpis všech dostupných dokladů.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/order_received/123 (required)
-        - _embedded (object, required)
-            - `order_received` (`ORDER_RECEIVED_DETAIL`, required) - Detail dokladu
+      - Include (`ORDER_RECEIVED_DETAIL`, required) - Detail dokladu
 
 
 ### Smazání objednávky [DELETE /order_received/{id}]
@@ -1045,8 +1063,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/proforma_invoice_issued/123 (required)
-        - _embedded (object, required)
-            - `proforma_invoice_issued` (`PROFORMA_INVOICE_ISSUED_DETAIL`, required) - Detail faktury
+      - Include (`PROFORMA_INVOICE_ISSUED_DETAIL`, required) - Detail faktury
 
 ### Vytvoření zálohové faktury vydané [POST /proforma_invoice_issued]
 
@@ -1061,6 +1078,15 @@ Tyto parametry nejsou povinné
 - Parametry `accountentrytype_id` a `vattype_id` přepisují hodnoty `chart_account_id` a `vat_chart_id`.
 
 
+**Režim One Stop Shop**
+
+- Dostupné pouze pro firmy, které jsou plátci DPH
+- Pro vystavení dokladu v režimu OSS je potřeba aktivovat tento režim v nastavení firmy pod menu "Nastavení One Stop Shop".
+- Doklady v režimu OSS mohou být vystaveny pouze pro zákazníky s adresou v zemi EU (krom ČR), kteří zároveň nejdou plátci DPH (nemají vyplněné DIČ).
+- Na dokladu musí být uvedená platná sazba DPH dle dané země. Seznam platných sazeb DPH lze načíst přes [**Seznam DPH**](#sazba-dph) vyplněním kódu příslušné země.
+- Doklady v režimu OSS lze vytvářet s datem vystavení od 1.7.2021.
+
+
 + Request (application/json)
     + Headers
 
@@ -1073,8 +1099,7 @@ Tyto parametry nejsou povinné
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/proforma_invoice_issued/123 (required)
-        - _embedded (object, required)
-            - `proforma_invoice_issued` (`PROFORMA_INVOICE_ISSUED_DETAIL`, required) - Detail faktury
+      - Include (`PROFORMA_INVOICE_ISSUED_DETAIL`, required) - Detail faktury
 
 ### Editace zálohové faktury vydané [PUT /proforma_invoice_issued/{id}]
 + Parameters
@@ -1092,8 +1117,7 @@ Tyto parametry nejsou povinné
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/proforma_invoice_issued/123 (required)
-        - _embedded (object, required)
-            - `proforma_invoice_issued` (`PROFORMA_INVOICE_ISSUED_DETAIL`, required) - Detail faktury
+      - Include (`PROFORMA_INVOICE_ISSUED_DETAIL`, required) - Detail faktury
 
 ### Stažení PDF zálohové faktury vydané [GET /proforma_invoice_issued/{id}/pdf]
 
@@ -1224,8 +1248,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/invoice_issued/123 (required)
-        - _embedded (object, required)
-            - `invoice_issued` (INVOICE_ISSUED_DETAIL, required) - Detail faktury
+        - Include (`INVOICE_ISSUED_DETAIL`, required) - Detail faktury
 
 ### Vytvoření faktury vydané [POST /invoice_issued]
 
@@ -1263,6 +1286,15 @@ Přidání EET k dokladu lze dvěmy způsoby.
 - Zápisem již odeslané EET zprávy do endpointu [**EET zprávy**](#eet-zpravy) a nastavnám ID zprávy do proměnné `eet_status`.
 
 
+**Režim One Stop Shop**
+
+- Dostupné pouze pro firmy, které jsou plátci DPH
+- Pro vystavení dokladu v režimu OSS je potřeba aktivovat tento režim v nastavení firmy pod menu "Nastavení One Stop Shop".
+- Doklady v režimu OSS mohou být vystaveny pouze pro zákazníky s adresou v zemi EU (krom ČR), kteří zároveň nejdou plátci DPH (nemají vyplněné DIČ).
+- Na dokladu musí být uvedená platná sazba DPH dle dané země. Seznam platných sazeb DPH lze načíst přes [**Seznam DPH**](#sazba-dph) vyplněním kódu příslušné země.
+- Doklady v režimu OSS lze vytvářet s datem vystavení od 1.7.2021.
+
+
 + Request (application/json)
     + Headers
 
@@ -1275,8 +1307,7 @@ Přidání EET k dokladu lze dvěmy způsoby.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/invoice_issued/123 (required)
-        - _embedded (object, required)
-            - `invoice_issued` (INVOICE_ISSUED_DETAIL, required) - Detail faktury
+        - Include (`INVOICE_ISSUED_DETAIL`, required) - Detail faktury
 
 ### Editace faktury vydané [PUT /invoice_issued/{id}]
 
@@ -1297,8 +1328,7 @@ Nelze editovat doklady s EET, použijte [Opravný daňový doklad](#opravne-dano
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/invoice_issued/123 (required)
-        - _embedded (object, required)
-            - `invoice_issued` (INVOICE_ISSUED_DETAIL, required) - Detail faktury
+        - Include (`INVOICE_ISSUED_DETAIL`, required) - Detail faktury
 
 ### Stažení PDF faktury vydané [GET /invoice_issued/{id}/pdf]
 
@@ -1404,8 +1434,7 @@ Výpis všech dostupných dokladů.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/creditnote_issued/123 (required)
-        - _embedded (object, required)
-            - `creditnote_issued` (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail dokladu
+        - Include (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail dokladu
 
 
 
@@ -1429,6 +1458,15 @@ Přidání EET k dokladu lze dvěmy způsoby.
 - Zápisem již odeslané EET zprávy do endpointu [**EET zprávy**](#eet-zpravy) a nastavnám ID zprávy do proměnné `eet_status`.
 
 
+**Režim One Stop Shop**
+
+- Dostupné pouze pro firmy, které jsou plátci DPH
+- Pro vystavení dokladu v režimu OSS je potřeba aktivovat tento režim v nastavení firmy pod menu "Nastavení One Stop Shop".
+- Doklady v režimu OSS mohou být vystaveny pouze pro zákazníky s adresou v zemi EU (krom ČR), kteří zároveň nejdou plátci DPH (nemají vyplněné DIČ).
+- Na dokladu musí být uvedená platná sazba DPH dle dané země. Seznam platných sazeb DPH lze načíst přes [**Seznam DPH**](#sazba-dph) vyplněním kódu příslušné země.
+- Doklady v režimu OSS lze vytvářet s datem vystavení od 1.7.2021.
+
+
 + Request (application/json)
     + Headers
 
@@ -1441,8 +1479,7 @@ Přidání EET k dokladu lze dvěmy způsoby.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/creditnote_issued/123 (required)
-        - _embedded (object, required)
-            - `creditnote_issued` (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail dokladu
+        - Include (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail dokladu
 
 ### Editace opravného dokladu [PUT /creditnote_issued/{id}]
 
@@ -1463,8 +1500,7 @@ Nelze  editovat doklady s EET, použijte nový [**Opravný daňový doklad**](#o
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/creditnote_issued/123 (required)
-        - _embedded (object, required)
-            - `creditnote_issued` (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail dokladu
+        - Include (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail dokladu
 
 
 ### Odeslání dokladu emailem [POST /creditnote_issued/{id}/email]
@@ -1547,8 +1583,7 @@ Výpis všech dostupných dokladů.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/order_issued/123 (required)
-        - _embedded (object, required)
-            - `order_issued` (`ORDER_ISSUED_DETAIL`, required) - Detail dokladu
+        - Include (`ORDER_ISSUED_DETAIL`, required) - Detail dokladu
 
 
 
@@ -1565,8 +1600,7 @@ Výpis všech dostupných dokladů.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/order_issued/123 (required)
-        - _embedded (object, required)
-            - `order_issued` (`ORDER_ISSUED_DETAIL`, required) - Detail dokladu
+        - Include (`ORDER_ISSUED_DETAIL`, required) - Detail dokladu
 
 
 
@@ -1587,8 +1621,7 @@ Výpis všech dostupných dokladů.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/order_issued/123 (required)
-        - _embedded (object, required)
-            - `order_issued` (`ORDER_ISSUED_DETAIL`, required) - Detail dokladu
+        - Include (`ORDER_ISSUED_DETAIL`, required) - Detail dokladu
 
 
 
@@ -1656,8 +1689,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/proforma_invoice_received/123 (required)
-        - _embedded (object, required)
-            - `proforma_invoice_received` (`PROFORMA_INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
+        - Include (`PROFORMA_INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
 
 ### Vytvoření zálohové faktury přijaté [POST /proforma_invoice_received]
 
@@ -1684,8 +1716,7 @@ Tyto parametry nejsou povinné
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/proforma_invoice_received/123 (required)
-        - _embedded (object, required)
-            - `proforma_invoice_received` (`PROFORMA_INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
+        - Include (`PROFORMA_INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
 
 ### Editace zálohové faktury přijaté [PUT /proforma_invoice_received/{id}]
 + Parameters
@@ -1703,8 +1734,7 @@ Tyto parametry nejsou povinné
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/proforma_invoice_received/123 (required)
-        - _embedded (object, required)
-            - `proforma_invoice_received` (`PROFORMA_INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
+        - Include (`PROFORMA_INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
 
 ### Smazání zálohové faktury přijaté [DELETE /proforma_invoice_received/{id}]
 
@@ -1774,8 +1804,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/invoice_received/123 (required)
-        - _embedded (object, required)
-            - `invoice_received` (`INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
+        - Include (`INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
 
 ### Vytvoření faktury přijaté [POST /invoice_received]
 + Request (application/json)
@@ -1790,8 +1819,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/invoice_received/123 (required)
-        - _embedded (object, required)
-            - `invoice_received` (`INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
+        - Include (`INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
 
 
 ### Editace faktury přijaté [PUT /invoice_received/{id}]
@@ -1810,8 +1838,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/invoice_received/123 (required)
-        - _embedded (object, required)
-            - `invoice_received` (`INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
+        - Include (`INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
 
 
 ### Smazání faktury přijaté [DELETE /invoice_received/{id}]
@@ -1881,8 +1908,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/creditnote_received/123 (required)
-        - _embedded (object, required)
-            - `creditnote_received` (`CREDITNOTE_RECEIVED_DETAIL`, required) - Detail dokladu
+        - Include (`CREDITNOTE_RECEIVED_DETAIL`, required) - Detail dokladu
 
 
 
@@ -1901,8 +1927,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/creditnote_received/123 (required)
-        - _embedded (object, required)
-            - `creditnote_received` (`CREDITNOTE_RECEIVED_DETAIL`, required) - Detail dokladu
+        - Include (`CREDITNOTE_RECEIVED_DETAIL`, required) - Detail dokladu
 
 ### Editace dokladu [PUT /creditnote_received/{id}]
 
@@ -1922,8 +1947,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/creditnote_received/123 (required)
-        - _embedded (object, required)
-            - `creditnote_received` (`CREDITNOTE_RECEIVED_DETAIL`, required) - Detail dokladu
+        - Include (`CREDITNOTE_RECEIVED_DETAIL`, required) - Detail dokladu
 
 
 ### Smazání dokladu [DELETE /creditnote_received/{id}]
@@ -1977,9 +2001,9 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/payment_issued (required)
-        - Include (`PAGING`, required) - Stránkování
         - _embedded (object, required)
             - `payment_issued` (array[`PAYMENT_ISSUED_LIST`], required) - Pole dostupných dokladů
+        - Include (`PAGING`, required) - Stránkování
 
 
 
@@ -1997,8 +2021,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/payment_issued/123 (required)
-        - _embedded (object, required)
-            - `payment_issued` (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
+        - Include (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
 
 ### Vytvoření platby vydané [POST /payment_issued]
 
@@ -2016,8 +2039,7 @@ Nelze nastavit současně zákazníka a dodavatele, či bankovní účet a pokla
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/payment_issued/123 (required)
-        - _embedded (object, required)
-            - `paymnet_issued` (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
+        - Include (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
 
 
 ### Editace platby vydané [PUT /payment_issued/{id}]
@@ -2036,8 +2058,7 @@ Nelze nastavit současně zákazníka a dodavatele, či bankovní účet a pokla
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/payment_issued/123 (required)
-        - _embedded (object, required)
-            - `payment_issued` (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
+        - Include (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
 
 ### Smazání platby vydané [DELETE /payment_issued/{id}]
 Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
@@ -2089,9 +2110,9 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/payment_received (required)
-        - Include (`PAGING`, required) - Stránkování
         - _embedded (object, required)
             - `payment_received` (array[`PAYMENT_RECEIVED_LIST`], required) - Pole dostupných dokladů
+        - Include (`PAGING`, required) - Stránkování
 
 ### Detail platby přijaté [GET /payment_received/{id}]
 + Parameters
@@ -2107,8 +2128,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/payment_received/123 (required)
-        - _embedded (object, required)
-            - `payment_received` (`PAYMENT_RECEIVED_DETAIL`, required) - Detail dokladu
+        - Include (`PAYMENT_RECEIVED_DETAIL`, required) - Detail dokladu
 
 ### Vytvoření platby přijaté [POST /payment_received]
 
@@ -2119,6 +2139,12 @@ Pokud je v nastavení klienta řádně nastavené EET, `payment_type` = 'cash' a
 
 Pro přidání dokladu s již odeslanou [**EET zprávou**](#eet-zpravy), nejprve vytvořte samostatně EET záznam, jehož ID nastavíte jako parametr `eet_status`.
 Záznamy se automaticky propojí.
+
+
+**Platba zálohy v režim One Stop Shop**
+
+- Režim OSS lze aktivovat pouze u plateb s vazbou na zálohovou fakturu
+- Ostatní pravidla jsou shodná s režimem OSS u faktur
 
 
 + Request (application/json)
@@ -2133,8 +2159,7 @@ Záznamy se automaticky propojí.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/payment_received/123 (required)
-        - _embedded (object, required)
-            - `paymnet_received` (`PAYMENT_RECEIVED_DETAIL`, required) - Detail dokladu
+        - Include (`PAYMENT_RECEIVED_DETAIL`, required) - Detail dokladu
 
 ### Editace platby přijaté [PUT /payment_received/{id}]
 
@@ -2155,8 +2180,7 @@ Platby s EET nelze editovat, použijte Vrácení přijaté EET platby.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/payment_received/123 (required)
-        - _embedded (object, required)
-            - `payment_received` (`PAYMENT_RECEIVED_DETAIL`, required) - Detail dokladu
+        - Include (`PAYMENT_RECEIVED_DETAIL`, required) - Detail dokladu
 
 ### Smazání platby přijaté [DELETE /payment_received/{id}]
 Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
@@ -2230,8 +2254,7 @@ Podrobné informace k pohybu, včetně spárovaných dokladů.
         - _link (object)
             - self (object)
                 - href: /1.2/bank_transaction/123 (required)
-        - _embedded (object)
-            - `bank_transaction` (BANK_STATEMENT_DETAIL, required) - Detail transakce
+        - Include (BANK_STATEMENT_DETAIL, required) - Detail transakce
 
 ### Import bankovního pohybu [POST /bank_transaction]
 
@@ -2266,8 +2289,7 @@ Pokud je transakce příchozí je protistranou [Zákazník](#zakaznici) a s úč
         - _link (object)
             - self (object)
                 - href: /1.2/bank_transaction/123 (required)
-        - _embedded (object)
-            - `bank_transaction` (`BANK_STATEMENT_DETAIL`, required) - Detail transakce
+        - Include (`BANK_STATEMENT_DETAIL`, required) - Detail transakce
 
 
 ### Editace bankovního pohybu [PUT /bank_transaction/{id}]
@@ -2288,8 +2310,7 @@ Při editaci typu platby (`payment_type`) se musí také změnit hodnoty `counte
         - _link (object)
             - self (object)
                 - href: /1.2/bank_transaction/123 (required)
-        - _embedded (object)
-            - `bank_transaction` (`BANK_STATEMENT_DETAIL`, required) - Detail transakce
+        - Include (`BANK_STATEMENT_DETAIL`, required) - Detail transakce
 
 ### Zaúčtování platby [PUT /bank_transaction/{id}/account]
 
@@ -2369,8 +2390,7 @@ Automatické vytvoření platby, pokud je bankovní pohyb úspěšně spárovan�
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/journal/123 (required)
-        - _embedded (object, required)
-            - `journal` (`JOURNAL_DETAIL`, required) - Detail položky
+        - Include (`JOURNAL_DETAIL`, required) - Detail položky
 
 ## Přímé zaúčtování [/direct_accounting]
 <a name="direct-accounting"></a>
@@ -2417,8 +2437,7 @@ Automatické vytvoření platby, pokud je bankovní pohyb úspěšně spárovan�
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/direct_accounting/123 (required)
-        - _embedded (object, required)
-            - `direct_accounting` (DIRECT_ACCOUNTING_DETAIL, required) - Detail dokladu
+        - Include (`DIRECT_ACCOUNTING_DETAIL`, required) - Detail dokladu
 
 ### Vytvoření dokladu [POST /direct_accounting]
 
@@ -2434,8 +2453,7 @@ Automatické vytvoření platby, pokud je bankovní pohyb úspěšně spárovan�
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/direct_accounting/123 (required)
-        - _embedded (object, required)
-            - `direct_accounting` (DIRECT_ACCOUNTING_DETAIL, required) - Detail faktury
+        - Include (`DIRECT_ACCOUNTING_DETAIL`, required) - Detail faktury
 
 ### Editace dokladu [PUT /direct_accounting/{id}]
 
@@ -2454,8 +2472,7 @@ Automatické vytvoření platby, pokud je bankovní pohyb úspěšně spárovan�
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/direct_accounting/123 (required)
-        - _embedded (object, required)
-            - `direct_accounting` (DIRECT_ACCOUNTING_DETAIL, required) - Detail dokladu
+        - Include (`DIRECT_ACCOUNTING_DETAIL`, required) - Detail dokladu
 
 ### Smazání dokladu [DELETE /direct_accounting/{id}]
 + Parameters
@@ -2467,13 +2484,14 @@ Automatické vytvoření platby, pokud je bankovní pohyb úspěšně spárovan�
             X-Auth-Key: api-key
 
 + Response 204
-## Kurzy DPH [/vat_rates]
-<a name="kurz-dph"></a>
+## Sazby DPH [/vat_rates]
+<a name="sazba-dph"></a>
 **/vat_rates**
 
-### Seznam kurzů DPH [GET /vat_rates?date={date}]
+### Seznam sazeb DPH [GET /vat_rates?date={date}&country={country}]
 + Parameters
     + date (string) ... Datum ve formátu yyy-mm-dd, pro které nás zajímají sazby
+    + country (string) ... Kód země EU (CZ, DE, FR, apod.) pro kterou nás zajímají sazby
 
 + Request
     + Headers
@@ -2504,18 +2522,25 @@ Formát odpovědi:
 + Response 200 (application/json)
 
         {"141":"Bonusy od banky","163":"Da\u0148ov\u00fd bonus","167":"Da\u0148ov\u00fd doklad","62":"Dopravn\u00e9\/ p\u0159epravn\u00e9","149":"Dotace organiza\u010dn\u00ed slo\u017eky","166":"Kurzov\u00e9 zisky","176":"Kurzov\u00fd rozd\u00edl zisk","99":"Myln\u00e1 p\u0159\u00edchoz\u00ed platba","159":"Pen\u00edze na cest\u011b - p\u0159\u00edjem","136":"P\u0159evod mezi bankovn\u00edmi \u00fa\u010dty","126":"P\u0159ijat\u00e9 z\u00e1lohy ","10":"Prodej majetku","30":"Prodej materi\u00e1lu","7":"Prodej slu\u017eby","130":"Prodej slu\u017eby - extern\u00ed servis","171":"Prodej slu\u017eby - lokalizace","172":"Prodej slu\u017eby - marketing","142":"Prodej slu\u017eby - n\u00e1jem","170":"Prodej slu\u017eby - p\u0159eklady","144":"Prodej slu\u017eby - pron\u00e1jem zemn\u00edho stroje","131":"Prodej slu\u017eby - servis za\u0159\u00edzen\u00ed","173":"Prodej slu\u017eby - v\u00fduka","8":"Prodej v\u00fdrobky","3":"Prodej zbo\u017e\u00ed","168":"Smluvn\u00ed pokuty a \u00faroky z prodlen\u00ed","12":"\u00dahrada faktury vydan\u00e9","153":"\u00dahrada pohled\u00e1vky za spole\u010dn\u00edkem","187":"\u00dahrada z\u00e1lohov\u00e9 faktury vydan\u00e9","31":"\u00darok","1":"\u00darok z bankovn\u00edho \u00fa\u010dtu","162":"Vklad fyzick\u00e9 osoby do podnik\u00e1n\u00ed","134":"Vklad spole\u010dn\u00edka spole\u010dnosti","140":"Vr\u00e1cen\u00ed DPH finan\u010dn\u00edm \u00fa\u0159adem","146":"V\u00fdb\u011br z banky na pokladnu","132":"Vy\u00fa\u010dtov\u00e1n\u00ed odvodu hotovosti z pokladny","38":"Zaokrouhlen\u00ed ","139":"Zv\u00fd\u0161en\u00ed z\u00e1kladn\u00edho kapit\u00e1lu"}
-## Typy DPH [/vat_type?doctype={doctype}]
+## Typy DPH [/vat_type?doctype={doctype}&oss={oss}]
 <a name="typy-dph"></a>
 **/vat_type**
 
 ### Seznam typů DPH [GET]
 Odpověď obsahuje pole dostupných typů DPH v závislosti na parametru `doctype`.
 
-Formát odpovědi:
+
+**Režim One Stop Shop**
+
+Seznam typů DPH pro režim OSS získáte nastavením parametru `oss=true`
+
+
+**Formát odpovědi**
 `{"id": "popis"}`
 
 + Parameters
     + doctype (string) ... Typ dokladu. Pro seznam dostupných hodnot si přejděte na [Typy dokladů](#typy-dokladu)
+    + oss (bool) ... Vypsat typy DPH pro režim One Stop Shop
 
 + Request
     + Headers
@@ -2664,7 +2689,7 @@ Seznam přijatých parametrů je shodný s těmi, které je možné odesílat do
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/price_list/123 (required)
-        - `price_list` (`PRICE_LIST_DETAIL`, required) - Detail
+        - Include (`PRICE_LIST_DETAIL`, required) - Detail
 
 ### Vytvořit položku [POST /price_list]
 
@@ -2681,7 +2706,7 @@ Seznam přijatých parametrů je shodný s těmi, které je možné odesílat do
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/price_list/123 (required)
-        - `price_list` (`PRICE_LIST_DETAIL`, required) - Detail
+        - Include (`PRICE_LIST_DETAIL`, required) - Detail
 
 ### Editovat položku [PUT /price_list/{id}]
 + Parameters
@@ -2700,7 +2725,7 @@ Seznam přijatých parametrů je shodný s těmi, které je možné odesílat do
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/price_list/123 (required)
-        - `price_list` (`PRICE_LIST_DETAIL`, required) - Detail
+        - Include (`PRICE_LIST_DETAIL`, required) - Detail
 
 ### Smazat položku [DELETE /price_list/{id}]
 
@@ -2754,7 +2779,7 @@ Nelze smazat položku ke které existuje pohyb na skladu. Použijte `is_hidden=t
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/warehouse/123 (required)
-        - `warehouse` (`WAREHOUSE_DETAIL`, required) - Detail
+        - Include (`WAREHOUSE_DETAIL`, required) - Detail
 
 ### Vytvoření skladu [POST /warehouse]
 
@@ -2771,7 +2796,7 @@ Nelze smazat položku ke které existuje pohyb na skladu. Použijte `is_hidden=t
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/warehouse/123 (required)
-        - `warehouse` (`WAREHOUSE_DETAIL`, required) - Detail
+        - Include (`WAREHOUSE_DETAIL`, required) - Detail
 
 ### Editace skladu [PUT /warehouse/{id}]
 + Parameters
@@ -2790,7 +2815,7 @@ Nelze smazat položku ke které existuje pohyb na skladu. Použijte `is_hidden=t
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/warehouse/123 (required)
-        - `warehouse` (`WAREHOUSE_DETAIL`, required) - Detail
+        - Include (`WAREHOUSE_DETAIL`, required) - Detail
 
 ### Smazání skladu [DELETE /warehouse/{id}]
 
@@ -2849,7 +2874,7 @@ Vytvořením pohybu vznikne skladová karta automaticky.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/inventory/123 (required)
-        - `inventory` (`INVENTORY_DETAIL`, required) - Detail
+        - Include (`INVENTORY_DETAIL`, required) - Detail
 
 ### Vytvoření skladové karty [POST /inventory]
 
@@ -2865,7 +2890,7 @@ Vytvořením pohybu vznikne skladová karta automaticky.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/inventory/123 (required)
-        - `inventory` (`INVENTORY_DETAIL`, required) - Detail
+        - Include (`INVENTORY_DETAIL`, required) - Detail
 
 ### Editace skladové karty [PUT /inventory/{id}]
 + Parameters
@@ -2883,7 +2908,7 @@ Vytvořením pohybu vznikne skladová karta automaticky.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/inventory/123 (required)
-        - `inventory` (`INVENTORY_DETAIL`, required) - Detail
+        - Include (`INVENTORY_DETAIL`, required) - Detail
 
 ### Smazání skladové karty [DELETE /inventory/{id}]
 
@@ -2940,7 +2965,7 @@ Nelze smazat skladovou kartu, pokud existuje pohyb.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/stock_movement/123 (required)
-        - `stock_movement` (`STOCK_MOVEMENT_DETAIL_AMOUNT`, required) - Detail
+        - Include (`STOCK_MOVEMENT_DETAIL_AMOUNT`, required) - Detail
 
 ### Vytvořit pohyb [POST /stock_movement]
 
@@ -2966,7 +2991,7 @@ Pohyb lze vytvořit dvěma způsby (viz. příklady požadavků).
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/stock_movement/123 (required)
-        - `stock_movement` (`STOCK_MOVEMENT_DETAIL_AMOUNT`, required) - Detail
+        - Include (`STOCK_MOVEMENT_DETAIL_AMOUNT`, required) - Detail
 
 
 + Request
@@ -2985,7 +3010,7 @@ Pohyb lze vytvořit dvěma způsby (viz. příklady požadavků).
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/stock_movement/123 (required)
-        - `stock_movement` (`STOCK_MOVEMENT_DETAIL_REAL`, required) - Detail
+        - Include (`STOCK_MOVEMENT_DETAIL_REAL`, required) - Detail
 
 # Group Webhooky
 
@@ -3033,7 +3058,7 @@ Datum ve formátu `YYYY-mm-dd`
 - price: `50` (price, required) - [**Price**](#data-types) - Cena
 - `unit_price_inc_vat`: `false` (boolean, optional) - Cena je včetně DPH
 - `unit`: `ks` (string) - Jednotka
-- `vat`: `0` (number) - [**DPH**](#kurz-dph)
+- `vat`: `0` (number) - [**DPH**](#sazba-dph)
 - `vat_total`: `0` (price) - [**Price**](#data-types) - DPH celkem
 - `department_id`: `1` (number) - [**Střediska**](#strediska)
 - `contract_id`: `1` (number) - [**Zakázky**](#zakazky)
@@ -3571,6 +3596,12 @@ Proměnné pouze pro čtení dostupné v seznamu
 - `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zbývá uhradit
 - `to_be_invoiced`: `50` (price, required) - [**Price**](#data-types) - Zbývá odečíst
 
+## `PROFORMA_INVOICE_ISSUED_LIST_WRITABLE` (object)
+Proměnné dostupné v seznamu
+### Properties
+- Include `DOCUMENT_ISSUED_LIST_WRITABLE`
+- `oss_mode`: `false` (boolean, optional) - Režim One Stop Shop
+
 ## `PROFORMA_INVOICE_ISSUED_LIST` (object)
 Proměnné dostupné v seznamu
 ### Properties
@@ -3578,7 +3609,7 @@ Proměnné dostupné v seznamu
     - self (object)
         - href: /1.2/proforma_invoice_issued/123 (required)
 - Include `PROFORMA_INVOICE_ISSUED_LIST_READONLY`
-- Include `DOCUMENT_ISSUED_LIST_WRITABLE`
+- Include `PROFORMA_INVOICE_ISSUED_LIST_WRITABLE`
 - Include `DOCUMENT_ISSUED_LIST`
 
 ## `PROFORMA_INVOICE_ISSUED_DETAIL_READONLY` (object)
@@ -3590,7 +3621,7 @@ Proměnné pouze pro čtení dostupné v detailu
 ## `PROFORMA_INVOICE_ISSUED_DETAIL_WRITABLE` (object)
 Proměnné pouze pro zápis dostupné v detailu
 ### Properties
-- Include `DOCUMENT_ISSUED_LIST_WRITABLE`
+- Include `PROFORMA_INVOICE_ISSUED_LIST_WRITABLE`
 - Include `DOCUMENT_ISSUED_DETAIL_WRITABLE`
 
 ## `PROFORMA_INVOICE_ISSUED_DETAIL` (object)
@@ -3631,6 +3662,7 @@ Proměnné pouze pro čtení dostupné v seznamu
 
 ## `INVOICE_ISSUED_LIST_WRITABLE` (object)
 - Include `DOCUMENT_ISSUED_LIST_WRITABLE`
+- `oss_mode`: `false` (boolean, optional) - Režim One Stop Shop
 
 ## `INVOICE_ISSUED_LIST` (object)
 Proměnné dostupné v seznamu
@@ -3706,6 +3738,7 @@ Proměnné dostupné v seznamu
 ### Properties
 - Include `DOCUMENT_ISSUED_LIST_WRITABLE`
 - `invoice_issued_id`: 12343 (number, optional)  - ID [faktury vydané](#faktury-vydane)
+- `oss_mode`: `false` (boolean, optional) - Režim One Stop Shop
 
 ## `CREDITNOTE_ISSUED_LIST` (object)
 Proměnné dostupné v seznamu
@@ -3892,7 +3925,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - price: `50` (price, required) - [**Price**](#data-types) - Cena
 - unit_price_inc_vat: `boolean`
 - `unit`: `ks` (string) - Jednotka
-- `vat`: `0` (number) - [**DPH**](#kurz-dph)
+- `vat`: `0` (number) - [**DPH**](#sazba-dph)
 - One Of
     - Properties
         - `accountentrytype_id`: `532` (number, optional) - [**Typ účetní položky**](#polozky-typy-uc-polozek)
@@ -4154,6 +4187,7 @@ Proměnné dostupné v detailu
 - date: `2019-07-12` (date, required) - [**Date**](#data-types) - Datum vystavení
 - `date_vat`: `2019-07-12` (date, optional) - [**Date**](#data-types) - Datum zdanitelného plnění (nepovinné u neplátce DPH)
 - `proforma_invoice_id`: 1234 (number, optional) - ID zálohové faktury
+- `oss_mode`: `false` (boolean, optional) - Režim One Stop Shop
 
 
 ## `PAYMENT_RECEIVED_LIST` (object)
@@ -4333,7 +4367,7 @@ Proměnné dostupné v detailu
 - `parent_document_id`: `3423` (number, optional) - ID rodičovkého dokladu
 - `date_expense`: `2019-07-12` (date, required) - [**Date**](#data-types) - Datum nákladu
 - `vat_type_id`: `467` (number, required) - [**Typ DPH**](#typy-dph)
-- `vat`: `0` (number, required) - [**DPH**](#kurz-dph)
+- `vat`: `0` (number, required) - [**DPH**](#sazba-dph)
 - `figure`: `vat`, `vat_base`, `full` (enum, required) - Typ částky
 - `supplier` (`SUPPLIER_DETAIL`, optional) - Dodavatel
 - `customer` (`CUSTOMER_DETAIL`, optional) - Zákazník
@@ -4460,7 +4494,7 @@ Proměnné pouze pro zápis dostupné v seznamu
 - `bar_code`: `BARCODE123` (string, optional) - Čárový kód
 - `price`: `50` (price, required) - [**Price**](#data-types) - Cena
 - `is_vat_price`: `false` (boolean, optional) - Cena včetně DPH
-- `vat_rate`: `0` (number, optional) - [**DPH**](#kurz-dph)
+- `vat_rate`: `0` (number, optional) - [**DPH**](#sazba-dph)
 - `currency`: `CZK` (enum, sample, optional) - [**Měna**](#currency)
 - `vat_chart_id`: `52` (number, optional) - [**Účet DPH**](#ucty-dph)
 - `external_code`: `20140001` (string, optional) - Externí číslo dokladu

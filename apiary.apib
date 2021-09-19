@@ -112,18 +112,20 @@ Parametry uvedené jako volitelné, mohou nabývat hodnot `NULL`.
 
 Seznam dostupných dokladů přes API a jejich interní identifikátory pro získání např. [Typů DPH](#typy-dph).
 
-| Typ  | Název                                                 |
-|:----:|-------------------------------------------------------|
-| FV   | [Faktury vydané](#faktury-vydane)                     |
-| FP   | [Faktury přijaté](#faktury-prijate)                   |
-| ZFV  | [Zálohové faktury vydané](#zalohove-faktury-vydane)   |
-| ZFP  | [Zálohové faktury přijaté](#zalohove-faktury-prijate) |
-| PV   | [Platby vydané](#platby-vydane)                       |
-| PP   | [Platby přijaté](#platby-prijate)                     |
-| OP   | [Objednávky přijaté](#objednavky-prijate)             |
-| OV   | [Objednávky vydané](#objednavky-vydane)               |
-| PZ   | [Přímé zaúčtování](#direct-accounting)                                     |
-| UD   | Uzávěrkový doklad                                     |
+| Typ  | Název                                                                 |
+|:----:|-----------------------------------------------------------------------|
+| FV   | [Faktury vydané](#faktury-vydane)                                     |
+| FP   | [Faktury přijaté](#faktury-prijate)                                   |
+| ZFV  | [Zálohové faktury vydané](#zalohove-faktury-vydane)                   |
+| ZFP  | [Zálohové faktury přijaté](#zalohove-faktury-prijate)                 |
+| ODV  | [Opravné_daňové_doklady_vydané](#opravne-danove-doklady-vydane)       |
+| ODP  | [Opravné_daňové_doklady_přijaté](#opravne-danove-doklady-prijate)     |
+| PV   | [Platby vydané](#platby-vydane)                                       |
+| PP   | [Platby přijaté](#platby-prijate)                                     |
+| OP   | [Objednávky přijaté](#objednavky-prijate)                             |
+| OV   | [Objednávky vydané](#objednavky-vydane)                               |
+| PZ   | [Přímé zaúčtování](#direct-accounting)                                |
+| UD   | Uzávěrkový doklad                                                     |
 
 # Přehled změn
 
@@ -1311,7 +1313,7 @@ Přidání EET k dokladu lze dvěmy způsoby.
 
 ### Editace faktury vydané [PUT /invoice_issued/{id}]
 
-Nelze editovat doklady s EET, použijte [Opravný daňový doklad](#opravne-danove-doklady).
+Nelze editovat doklady s EET, použijte [Opravný daňový doklad](#opravne-danove-doklady-vydane).
 
 + Parameters
     + id: 123 (number, required)
@@ -1367,7 +1369,7 @@ Odeslání emailu s odkazem na doklad a PDF na vámi zvolenou adresu.
 
 Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
 
-Nelze smazat doklady s EET, použijte [Opravný daňový doklad](#opravne-danove-doklady).
+Nelze smazat doklady s EET, použijte [Opravný daňový doklad](#opravne-danove-doklady-vydane).
 
 + Parameters
     + id: 123 (number, required)
@@ -1379,7 +1381,7 @@ Nelze smazat doklady s EET, použijte [Opravný daňový doklad](#opravne-danove
 
 + Response 204
 ## Opravné daňové doklady [/creditnote_issued]
-<a name="opravne-danove-doklady"></a>
+<a name="opravne-danove-doklady-vydane"></a>
 **/creditnote_issued**
 
 ### Seznam opravných dokladů [GET /creditnote_issued{?page,pageSize,customer_id,customer_ico,date_from,date_to,maturity_date_from,maturity_date_to,sequence_code,variable_symbol,currency,price_from,price_to,paid,deleted,accounted,payment_type,bank_account}]
@@ -1483,7 +1485,7 @@ Přidání EET k dokladu lze dvěmy způsoby.
 
 ### Editace opravného dokladu [PUT /creditnote_issued/{id}]
 
-Nelze  editovat doklady s EET, použijte nový [**Opravný daňový doklad**](#opravne-danove-doklady).
+Nelze  editovat doklady s EET, použijte nový [**Opravný daňový doklad**](#opravne-danove-doklady-vydane).
 
 + Parameters
     + id: 123 (number, required)
@@ -1523,7 +1525,7 @@ Odeslání emailu s odkazem na doklad a PDF na vámi zvolenou adresu.
 
 ### Smazání opravného dokladu [DELETE /creditnote_issued/{id}]
 Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
-Nelze smazat doklady s EET, použijte nový [**Opravný daňový doklad**](#opravne-danove-doklady).
+Nelze smazat doklady s EET, použijte nový [**Opravný daňový doklad**](#opravne-danove-doklady-vydane).
 + Parameters
     + id: 123 (number, required)
 
@@ -1854,7 +1856,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
 + Response 204
 
 ## Opravné daňové doklady přijaté [/creditnote_received]
-<a name="creditnote-received"></a>
+<a name="opravne-danove-doklady-prijate"></a>
 **/creditnote_received**
 
 ### Vypis všech dostupných dokladů [GET /creditnote_received{?page,pageSize,supplier_id,supplier_ico,date_from,date_to,maturity_date_from,maturity_date_to,sequence_code,variable_symbol,currency,price_from,price_to,paid,deleted,accounted,payment_type,bank_account}]

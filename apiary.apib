@@ -129,6 +129,12 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 
 # Přehled změn
 
+## 10.11.2021
+### Změny ve všech verzích API
+
+- bank_statement
+  * odstraněna povinnost spadajícího datumu pohybu do otevřeného účetního období či období DPH
+
 ## 01.09.2021
 ### Změny ve všech verzích API
 
@@ -2261,8 +2267,6 @@ Podrobné informace k pohybu, včetně spárovaných dokladů.
 ### Import bankovního pohybu [POST /bank_transaction]
 
 Přenesení nového pohybu do systému.
-
-Pohyb může být označen jedinečným identifikátorem (`reference_number`) z výpisu, který zamezí duplicitám.
 
 Součástí importu je automatický pokus o spárování dokladu s exitujícími doklady v systému.
 

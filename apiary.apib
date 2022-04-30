@@ -136,6 +136,21 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 
 # Přehled změn
 
+## 01.05.2022
+### Novinky ve verzi API 1.2
+
+- invoice_issued
+  * zaúčtování dokladu pomocí endpointu `/invoice_issued/{id}/account`
+
+- invoice_received
+  * zaúčtování dokladu pomocí endpointu `/invoice_received/{id}/account`
+
+- creditnote_issued
+  * zaúčtování dokladu pomocí endpointu `/creditnote_issued/{id}/account`
+
+- creditnote_received
+  * zaúčtování dokladu pomocí endpointu `/creditnote_received/{id}/account`
+
 ## 10.11.2021
 ### Změny ve všech verzích API
 
@@ -1345,6 +1360,26 @@ Nelze editovat doklady s EET, použijte [Opravný daňový doklad](#opravne-dano
                 - href: /1.2/invoice_issued/123 (required)
         - Include (`INVOICE_ISSUED_DETAIL`, required) - Detail faktury
 
+### Zaúčtování faktury [PUT /invoice_issued/{id}/account]
+
+Zaúčtování faktury do účetnictví.
+Položky dokladu musejí mít nastavené zaúčtování.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/invoice_issued/123 (required)
+        - Include (`INVOICE_ISSUED_DETAIL`, required) - Detail faktury
+
 ### Stažení PDF faktury vydané [GET /invoice_issued/{id}/pdf]
 
 Vrátí binární data PDF souboru pro tisk nebo uložení do souboru.
@@ -1509,6 +1544,26 @@ Nelze  editovat doklady s EET, použijte nový [**Opravný daňový doklad**](#o
             X-Auth-Key: api-key
 
     + Attributes (`CREDITNOTE_ISSUED_CREATE`)
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/creditnote_issued/123 (required)
+        - Include (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail dokladu
+
+### Zaúčtování dokladu [PUT /creditnote_issued/{id}/account]
+
+Zaúčtování dobropisu do účetnictví.
+Položky dokladu musejí mít nastavené zaúčtování.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
 
 + Response 200 (application/hal+json)
     + Attributes (object)
@@ -1855,6 +1910,25 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
                 - href: /1.2/invoice_received/123 (required)
         - Include (`INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
 
+### Zaúčtování faktury [PUT /creditnote_issued/{id}/account]
+
+Zaúčtování faktury do účetnictví.
+Položky dokladu musejí mít nastavené zaúčtování.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/invoice_received/123 (required)
+        - Include (`INVOICE_RECEIVED_DETAIL`, required) - Detail faktury
 
 ### Smazání faktury přijaté [DELETE /invoice_received/{id}]
 Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
@@ -1956,6 +2030,26 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
             Content-Type: application/json
 
     + Attributes (`CREDITNOTE_RECEIVED_CREATE`)
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/creditnote_received/123 (required)
+        - Include (`CREDITNOTE_RECEIVED_DETAIL`, required) - Detail dokladu
+
+### Zaúčtování dokladu [PUT /creditnote_issued/{id}/account]
+
+Zaúčtování dobropisu do účetnictví.
+Položky dokladu musejí mít nastavené zaúčtování.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
 
 + Response 200 (application/hal+json)
     + Attributes (object)

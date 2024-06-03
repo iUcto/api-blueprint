@@ -1592,7 +1592,7 @@ Odeslání emailu s odkazem na doklad a PDF na vámi zvolenou adresu.
         - send: `true` (boolean, required)
 
 ### Smazání opravného dokladu [DELETE /creditnote_issued/{id}]
-Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
+Pokusí se smazat vybraný dokladu, vrátí chybu pokud se doklad nesmaže.
 Nelze smazat doklady s EET, použijte nový [**Opravný daňový doklad**](#opravne-danove-doklady-vydane).
 + Parameters
     + id: 123 (number, required)
@@ -2170,7 +2170,7 @@ Nelze nastavit současně zákazníka a dodavatele, či bankovní účet a pokla
         - Include (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
 
 ### Smazání platby vydané [DELETE /payment_issued/{id}]
-Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
+Pokusí se smazat vybraný dokladu, vrátí chybu pokud se doklad nesmaže.
 + Parameters
     + id: 123 (number, required)
 
@@ -2292,7 +2292,7 @@ Platby s EET nelze editovat, použijte Vrácení přijaté EET platby.
         - Include (`PAYMENT_RECEIVED_DETAIL`, required) - Detail dokladu
 
 ### Smazání platby přijaté [DELETE /payment_received/{id}]
-Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
+Pokusí se smazat vybraný dokladu, vrátí chybu pokud se doklad nesmaže.
 Platby s EET nelze editovat, použijte Vrácení přijaté platby.
 + Parameters
     + id: 123 (number, required)
@@ -4265,8 +4265,9 @@ Proměnné dostupné v detailu
 - Include `PAYMENT_ISSUED_DETAIL_WRITABLE`
 - items (array[`DOCUMENT_ITEMS_CREATE_ACC`], required) - Pole položek
 - `invoice_id`: `13290` (number) - ID faktury
-- `customer_id`: 785 (number, required) - ID [zákazníka](#zakaznici)
-- `supplier_id`: 785 (number, required) - ID [dodavatele](#dodavatele)
+- One Of
+  - `customer_id`: 785 (number, required) - ID [zákazníka](#zakaznici)
+  - `supplier_id`: 785 (number, required) - ID [dodavatele](#dodavatele)
 - `cash_register_id`: 785 (number, required) - ID pokladny
 - One Of
     - Properties
@@ -4342,8 +4343,9 @@ Proměnné dostupné v detailu
 - Include `PAYMENT_RECEIVED_DETAIL_WRITABLE`
 - items (array[`DOCUMENT_ITEMS_CREATE_ACC`], required) - Pole položek
 - `invoice_id`: `13290` (number) - ID faktury
-- `customer_id`: 785 (number, required) - ID [zákazníka](#zakaznici)
-- `supplier_id`: 45 (number, required) - ID [dodavatele](#dodavatele)
+- One Of
+  - `customer_id`: 785 (number, required) - ID [zákazníka](#zakaznici)
+  - `supplier_id`: 45 (number, required) - ID [dodavatele](#dodavatele)
 - `cash_register_id`: 115 (number, required) - ID pokladny
 - One Of
     - Properties

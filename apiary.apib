@@ -119,22 +119,28 @@ Parametry uvedené jako volitelné, mohou nabývat hodnot `NULL`.
 
 Seznam dostupných dokladů přes API a jejich interní identifikátory pro získání např. [Typů DPH](#typy-dph).
 
-| Typ  | Název                                                                 |
-|:----:|-----------------------------------------------------------------------|
-| FV   | [Faktury vydané](#faktury-vydane)                                     |
-| FP   | [Faktury přijaté](#faktury-prijate)                                   |
-| ZFV  | [Zálohové faktury vydané](#zalohove-faktury-vydane)                   |
-| ZFP  | [Zálohové faktury přijaté](#zalohove-faktury-prijate)                 |
-| ODV  | [Opravné_daňové_doklady_vydané](#opravne-danove-doklady-vydane)       |
-| ODP  | [Opravné_daňové_doklady_přijaté](#opravne-danove-doklady-prijate)     |
-| PV   | [Platby vydané](#platby-vydane)                                       |
-| PP   | [Platby přijaté](#platby-prijate)                                     |
-| OP   | [Objednávky přijaté](#objednavky-prijate)                             |
-| OV   | [Objednávky vydané](#objednavky-vydane)                               |
-| PZ   | [Přímé zaúčtování](#direct-accounting)                                |
-| UD   | Uzávěrkový doklad                                                     |
+| Typ | Název                                                             |
+|:---:|-------------------------------------------------------------------|
+| FV  | [Faktury vydané](#faktury-vydane)                                 |
+| FP  | [Faktury přijaté](#faktury-prijate)                               |
+| ZFV | [Zálohové faktury vydané](#zalohove-faktury-vydane)               |
+| ZFP | [Zálohové faktury přijaté](#zalohove-faktury-prijate)             |
+| ODV | [Opravné_daňové_doklady_vydané](#opravne-danove-doklady-vydane)   |
+| ODP | [Opravné_daňové_doklady_přijaté](#opravne-danove-doklady-prijate) |
+| PV  | [Platby vydané](#platby-vydane)                                   |
+| PP  | [Platby přijaté](#platby-prijate)                                 |
+| OP  | [Objednávky přijaté](#objednavky-prijate)                         |
+| OV  | [Objednávky vydané](#objednavky-vydane)                           |
+| PZ  | [Přímé zaúčtování](#direct-accounting)                            |
+| IPN | [Interní předpisy nákladů](#interni-predpisy-nakladu)             |
+| UD  | Uzávěrkový doklad                                                 |
 
 # Přehled změn
+
+## 01.09.2024
+### Novinky ve verzi API 1.2
+
+* přidání nového typu dokladů [Interní předpisy nákladů](#interni-predpisy-nakladu) `/direct_expense`
 
 ## 01.05.2022
 ### Novinky ve verzi API 1.2
@@ -2070,6 +2076,129 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
             X-Auth-Key: api-key
 
 + Response 204
+## Interní předpisy nákladů [/direct_expense]
+<a name="interni-predpisy-nakladu"></a>
+**/direct_expense**
+
+### Seznam interních předpisů nákladů [GET /direct_expense{?page,pageSize,supplier_id,supplier_ico,date_from,date_to,maturity_date_from,maturity_date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,paid,deleted,accounted,payment_type,external_code}]
++ Parameters
+    + page: `1` (number, optional) - Číslo stránky
+    + pageSize: `50` (number, optional) - Počet záznamů na stránku
+    + supplier_id: `1234` (number, optional) - ID dodavatele
+    + supplier_ico: `11122233` (string, optional) - IČO dodavatele
+    + date_from: `2019-01-01` (date, optional) - Datum vystavení OD
+    + date_to: `2019-02-01` (date, optional) - Datum vystavení DO
+    + maturity_date_from: `2019-01-01` (date, optional) - Datum splatnosti OD
+    + maturity_date_to: `2019-02-01` (date, optional) - Datum splatnosti DO
+    + date_vat_from: `2019-01-01` (date, optional) - Datum zdanitelného plnění OD
+    + date_vat_to: `2019-02-01` (date, optional) - Datum zdanitelného plnění DO
+    + sequence_code: `FV20190005` (string, optional) - Číslo dokladu
+    + variable_symbol: `11112222` (string, optional) - Variabilní symbol
+    + currency: `CZK` (string, optional) - Měna dokladu
+    + price_from: `50` (price, optional) - Cena celkem OD
+    + price_to: `100` (price, optional) - Cena celkem DO
+    + paid: `true` (boolean, optional) - Zaplaceno
+    + deleted: `false` (boolean, optional) - Smazáno
+    + accounted: `true` (boolean, optional) - Zaúčtované
+    + payment_type: `transfer` (string, optional) - [**Platební metoda**](#metody-plateb)
+    + external_code: `FV303` (string, optional) - Externí kód
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/direct_expense (required)
+        - _embedded (object, required)
+            - `direct_expense` (array[`DIRECT_EXPENSE_LIST`], required) - Pole dostupných interních předpisů nákladů
+        - Include (`PAGING`, required) - Stránkování
+
+### Detail iterního předpisu nákladu [GET /direct_expense/{id}]
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/direct_expense/123 (required)
+        - Include (`DIRECT_EXPENSE_DETAIL`, required) - Detail předpisu
+
+### Vytvoření interního předpisu nákladu [POST /direct_expense]
++ Request (application/json)
+    + Headers
+
+            X-Auth-Key: api-key
+
+    + Attributes (`DIRECT_EXPENSE_CREATE`)
+
++ Response 201 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/direct_expense/123 (required)
+        - Include (`DIRECT_EXPENSE_DETAIL`, required) - Detail předpisu
+
+
+### Editace interního předpisu nákladu [PUT /direct_expense/{id}]
++ Parameters
+    + id: 123 (number, required)
+
++ Request (application/json)
+    + Headers
+
+            X-Auth-Key: api-key
+
+    + Attributes (`DIRECT_EXPENSE_CREATE`)
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/direct_expense/123 (required)
+        - Include (`DIRECT_EXPENSE_DETAIL`, required) - Detail předpisu
+
+### Zaúčtování předpisu [PUT /direct_expense/{id}/account]
+
+Zaúčtování předpisu do účetnictví.
+Položky dokladu musejí mít nastavené zaúčtování.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/direct_expense/123 (required)
+        - Include (`DIRECT_EXPENSE_DETAIL`, required) - Detail předpisu
+
+### Smazání interního předpisu nákladu [DELETE /direct_expense/{id}]
+Pokusí se smazat vybraný doklad. Pokud je doklad vázán na jiný záznam, vrátí chybu a doklad se nesmaže.
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 204
+
 
 # Group Platby
 ## Platby vydané [/payment_issued]
@@ -4201,6 +4330,78 @@ Proměnné dostupné v detailu
         - `payment_type`: transfer, creditcard (enum, required) - [**Platební metody**](#metody-plateb)
         - `bank_account`: 456 (number, required) - ID [**bankovního účtu**](#bankovni-ucty)
 - `supplier_bank_account`: `123456789/0800` (string) - Bankovní účet dodavatele
+## `DIRECT_EXPENSE_LIST_READONLY` (object)
+Proměnné pouze pro čtení dostupné v seznamu
+### Properties
+- id: `13290` (number) - ID předpisu
+- `price_inc_vat`: `50` (price, required) - [**Price**](#data-types) - Cena celkem
+- `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zbývá uhradit
+- `deleted`: `false` (boolean) - Smazáno
+- `accounted`: `false` (boolean) - Zaúčtováno
+
+## `DIRECT_EXPENSE_LIST_WRITABLE` (object)
+Proměnné pouze pro zápis dostupné v seznamu
+### Properties
+- `sequence_code`: `IPN20190001` (string, optional) - Číslo dokladu
+- `external_code`: `20190001` (string, optional) - Externí číslo dokladu
+- `variable_symbol`: `20190001` (string, optional) - Variabilní symbol
+- date: `2019-07-12` (date, required) - [**Date**](#data-types) - Datum vystavení
+- `date_vat`: `2019-07-12` (date, optional) - [**Date**](#data-types) - Datum zdanitelného plnění (nepovinné u neplátce DPH)
+- `maturity_date`: `2019-08-12` (date, required) - [**Date**](#data-types) - Datum splatnosti
+- currency: `CZK` (enum, sample, required) - [**Měna**](#currency)
+
+## `DIRECT_EXPENSE_LIST` (object)
+Proměnné dostupné v seznamu
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.2/direct_expense/123 (required)
+- Include `DIRECT_EXPENSE_LIST_READONLY`
+- Include `DIRECT_EXPENSE_LIST_WRITABLE`
+- `supplier` (`SUPPLIER_LIST`, required) - Dodavatel
+
+## `DIRECT_EXPENSE_DETAIL_READONLY` (object)
+Proměnné pouze pro čtení dostupné detailu
+### Properties
+- Include `DIRECT_EXPENSE_LIST_READONLY`
+- price: `50` (price, required) - [**Price**](#data-types) - Cena
+- `price_czk`: `50` (price, required) - [**Price**](#data-types) - Cena v CZK
+- `price_inc_vat_czk`: `50` (price, required) - [**Price**](#data-types) - Cena celkem v CZK
+- `payment_type` (`PAYMENT_TYPE_ENUM`, required) - [**Platební metody**](#metody-plateb)
+- `chartaccount_dal_id`: `306` (number, required) - ID účtu účtové osnovy
+- items (array[`DOCUMENT_ITEMS_DETAIL_ACC`], required) - Pole položek
+
+## `DIRECT_EXPENSE_DETAIL_WRITABLE` (object)
+Proměnné pouze pro zápis dostupné v detailu
+### Properties
+- Include `DIRECT_EXPENSE_LIST_WRITABLE`
+- `date_vat_prev`: `2019-05-05` (date, optional) - [**Date**](#data-types) - Datum předchozí sazby DPH
+- `description`: `Popis` (string, optional) - Poznámka
+- `rounding_type` (`ROUNDING_TYPE_ENUM`, optional) - [**Způsob zaokrouhlení**](#zaokrouhleni)
+
+
+## `DIRECT_EXPENSE_DETAIL` (object)
+Proměnné dostupné v detailu
+### Properties
+- Include `DIRECT_EXPENSE_DETAIL_READONLY`
+- Include `DIRECT_EXPENSE_DETAIL_WRITABLE`
+- `supplier` (`SUPPLIER_DETAIL`, required) - Dodavatel
+- `bank_account` (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bankovni-ucty)
+
+## `DIRECT_EXPENSE_CREATE` (object)
+Zapisovatelné proměnné pro vytváření a editaci dokladu
+### Properties
+- Include `DIRECT_EXPENSE_DETAIL_WRITABLE`
+- items (array[`DOCUMENT_ITEMS_CREATE_ACC`], required) - Pole položek
+- `supplier_id`: 785 (number, required) - ID [dodavatele](#dodavatele)
+- `chartaccount_dal_id`: 306 (number, required) - ID účtu účtové osnovy
+- One Of
+    - Properties
+        - `payment_type`: cash, cashondelivery, reciprocity (enum, required) - [**Platební metody**](#metody-plateb)
+        - `bank_account`: `null` (string, optional) - ID [**bankovního účtu**](#bankovni-ucty)
+    - Properties
+        - `payment_type`: transfer, creditcard (enum, required) - [**Platební metody**](#metody-plateb)
+        - `bank_account`: 456 (number, required) - ID [**bankovního účtu**](#bankovni-ucty)
 
 ## `PAYMENT_ISSUED_LIST_READONLY` (object)
 ### Properties

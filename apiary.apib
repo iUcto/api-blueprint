@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://online.iucto.cz/api/1.2/
+HOST: https://online.iucto.cz/api/1.3/
 
 # iÚčto
 <a name="top"/>
@@ -136,6 +136,35 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 | UD  | Uzávěrkový doklad                                                 |
 
 # Přehled změn
+
+## 19.02.2025
+
+### Nová verze API 1.3
+
+- **Doklady `Platby vydané` a `Platby přijaté` se již nezaúčtovávají automaticky při vytvoření**, ale je nutné je zaúčtovat pomocí nového endpointu
+
+- payment_issued
+    * zaúčtování dokladu pomocí endpointu `/payment_issued/{id}/account`
+
+- payment_received
+    * zaúčtování dokladu pomocí endpointu `/payment_received/{id}/account`
+
+### Novinky ve verzi API 1.2 a výše
+
+- bank_transaction
+    * přidány parametry `currency_original` a `amount_original` pro záznamy v cizí měně
+- payment_received
+    * přidány parametry `creditnote` a `creditnote_id` pro vazbu na dobropis
+- payment_issued
+    * přidány parametry `creditnote` a `creditnote_id` pro vazbu na dobropis
+
+### Změny ve všech verzích API
+- bank_account
+    * odstraněn povinný parametr `chart_account_valid_from`, používá se vždy datum platnosti Účtu účetní osnovy
+
+- bank_transaction
+    * přidán čas vytvoření záznamu `created`
+
 
 ## 01.09.2024
 ### Novinky ve verzi API 1.2
@@ -2238,7 +2267,7 @@ Pokusí se smazat vybraný doklad. Pokud je doklad vázán na jiný záznam, vr�
     + Attributes (object)
         - _link (object, required)
             - self (object, required)
-                - href: /1.2/payment_issued (required)
+                - href: /1.3/payment_issued (required)
         - _embedded (object, required)
             - `payment_issued` (array[`PAYMENT_ISSUED_LIST`], required) - Pole dostupných dokladů
         - Include (`PAGING`, required) - Stránkování
@@ -2258,7 +2287,7 @@ Pokusí se smazat vybraný doklad. Pokud je doklad vázán na jiný záznam, vr�
     + Attributes (object)
         - _link (object, required)
             - self (object, required)
-                - href: /1.2/payment_issued/123 (required)
+                - href: /1.3/payment_issued/123 (required)
         - Include (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
 
 ### Vytvoření platby vydané [POST /payment_issued]
@@ -2276,7 +2305,7 @@ Nelze nastavit současně zákazníka a dodavatele, či bankovní účet a pokla
     + Attributes (object)
         - _link (object, required)
             - self (object, required)
-                - href: /1.2/payment_issued/123 (required)
+                - href: /1.3/payment_issued/123 (required)
         - Include (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
 
 
@@ -2295,8 +2324,28 @@ Nelze nastavit současně zákazníka a dodavatele, či bankovní účet a pokla
     + Attributes (object)
         - _link (object, required)
             - self (object, required)
-                - href: /1.2/payment_issued/123 (required)
+                - href: /1.3/payment_issued/123 (required)
         - Include (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
+
+### Zaúčtování platby vydané [PUT /payment_issued/{id}/account]
+
+Zaúčtování platby vydané do účetnictví.
+Položky dokladu musejí mít nastavené zaúčtování.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.3/payment_issued/123 (required)
+      - Include (`PAYMENT_ISSUED_DETAIL`, required) - Detail dokladu
 
 ### Smazání platby vydané [DELETE /payment_issued/{id}]
 Pokusí se smazat vybraný dokladu, vrátí chybu pokud se doklad nesmaže.
@@ -2418,6 +2467,26 @@ Platby s EET nelze editovat, použijte Vrácení přijaté EET platby.
         - _link (object, required)
             - self (object, required)
                 - href: /1.2/payment_received/123 (required)
+        - Include (`PAYMENT_RECEIVED_DETAIL`, required) - Detail dokladu
+
+### Zaúčtování platby přijaté [PUT /payment_received/{id}/account]
+
+Zaúčtování platby přijaté do účetnictví.
+Položky dokladu musejí mít nastavené zaúčtování.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.3/payment_received/123 (required)
         - Include (`PAYMENT_RECEIVED_DETAIL`, required) - Detail dokladu
 
 ### Smazání platby přijaté [DELETE /payment_received/{id}]
@@ -3454,7 +3523,6 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - iban: `CZ10INGB0697669236` (string, optional) - IBAN
 - `initial_state`: 0 (price) - [**Price**](#data-types) - Počáteční stav účtu
 - `chart_account_id`: 424 (number, optional) - [**Účet úč. osnovy**](#ucty-uc-osnovy)
-- `chart_account_valid_from`: `01-01-2017` (date, required) - [**Date**](#data-types) - Účet úč. osnovy platný od
 - visible: true (boolean) - Viditelnost účtu v seznamech
 
 ## `BANK_ACCOUNT_LIST` (object)
@@ -4429,6 +4497,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - `customer` (`CUSTOMER_LIST`, optional) - Zákazník
 - `supplier` (`SUPPLIER_LIST`, optional) - Dodavatel
 - `invoice` (`INVOICE_RECEIVED_LIST`, optional) - Faktura
+- `creditnote` (`CREDITNOTE_ISSUED_LIST`, optional) - Dobropis
 - `cash_register` (`CASH_REGISTER_LIST`, optional) - Pokladna
 - `bank_account` (`BANK_ACCOUNT_LIST`, optional) - [**Bankovní účet**](#bankovni-ucty)
 
@@ -4458,6 +4527,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - `supplier` (`SUPPLIER_DETAIL`, required) - Dodavatel
 - `customer` (`CUSTOMER_DETAIL`, required) - Zákazník
 - `invoice` (`INVOICE_RECEIVED_DETAIL`, optional) - Faktura
+- `creditnote` (`CREDITNOTE_ISSUED_DETAIL`, optional) - Dobropis
 - `cash_register` (`CASH_REGISTER_DETAIL`, optional) - Pokladna
 - `bank_account` (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bankovni-ucty)
 
@@ -4466,6 +4536,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - Include `PAYMENT_ISSUED_DETAIL_WRITABLE`
 - items (array[`DOCUMENT_ITEMS_CREATE_ACC`], required) - Pole položek
 - `invoice_id`: `13290` (number) - ID faktury
+- `creditnote_id`: `13290` (number) - ID opravného daňového dokladu
 - One Of
   - `customer_id`: 785 (number, required) - ID [zákazníka](#zakaznici)
   - `supplier_id`: 785 (number, required) - ID [dodavatele](#dodavatele)
@@ -4509,6 +4580,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - `customer` (`CUSTOMER_LIST`, required) - Zákazník
 - `supplier` (`SUPPLIER_LIST`, required) - Dodavatel
 - `invoice` (`INVOICE_ISSUED_LIST`, optional) - Faktura
+- `creditnote` (`CREDITNOTE_RECEIVED_LIST`, optional) - Dobropis
 - `cash_register` (`CASH_REGISTER_LIST`, optional) - Pokladna
 
 ## `PAYMENT_RECEIVED_DETAIL_READONLY` (object)
@@ -4536,6 +4608,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - `supplier` (`SUPPLIER_DETAIL`, required) - Dodavatel
 - `customer` (`CUSTOMER_DETAIL`, required) - Zákazník
 - `invoice` (`INVOICE_ISSUED_DETAIL`, optional) - Faktura
+- `creditnote` (`CREDITNOTE_RECEIVED_DETAIL`, optional) - Dobropis
 - `cash_register` (`CASH_REGISTER_DETAIL`, optional) - Pokladna
 - `bank_account` (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bankovni-ucty)
 
@@ -4544,6 +4617,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - Include `PAYMENT_RECEIVED_DETAIL_WRITABLE`
 - items (array[`DOCUMENT_ITEMS_CREATE_ACC`], required) - Pole položek
 - `invoice_id`: `13290` (number) - ID faktury
+- `creditnote_received_id`: `13290` (number) - ID opravného daňového dokladu
 - One Of
   - `customer_id`: 785 (number, required) - ID [zákazníka](#zakaznici)
   - `supplier_id`: 45 (number, required) - ID [dodavatele](#dodavatele)
@@ -4578,6 +4652,8 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - `specific_symbol` - Specifický symbol
 - `bank_account`: 544 (number, optional) - [**ID bankovního účtu**](#bankovni-ucty)
 - `bank_account_contraparty`: `19-123457/0710` (string, optional) - Číslo bankovního účtu protistrany
+- `amount_original`: 1076 (price, optional) - [**Price**](#data-types) - Částka v původní měně pohybu
+- `currency_original`: EUR (enum, sample, optional) - [**Měna**](#currency) - Původní měna pohybu
 
 ## `BANK_STATEMENT_EXTRA` (object)
 
@@ -4600,7 +4676,7 @@ Tento objekt reprezentuje detail bankovní transakce.
 - id: 7745 (number, required) - Unikátní id transakce v systému.
 - status (`BANK_STATEMENT_STATUS`, required) - Stav spárování
 - `price_czk` (number, required) - [**Price**](#data-types) - Částka v CZK podle kurzu k datu pohybu
-
+- `created` (number, required) - Datum importu záznamu
 
 ## `BANK_STATEMENT_PARAMS` (object)
 ### Properties

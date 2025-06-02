@@ -8,9 +8,9 @@ HOST: https://online.iucto.cz/api/1.3/
 `https://online.iucto.cz/api`
 
 iÚčto API je založena na REST principu.
-API umožnuje práci s různými typy dokladů pomocí HTTP požadavků zasílaných ve formátu popsaném níže.
+API umožňuje práci s různými typy dokladů pomocí HTTP požadavků zasílaných ve formátu popsaném níže.
 
-`Ke každému HTTP požadavku je nutné přidat HTTP hlavičku X-Auth-key`
+`Ke každému HTTP požadavku je nutné přidat HTTP hlavičku X-Auth-Key`
 
 Veškerá komunikace probíhá pomocí protokolu HTTPS.
 
@@ -21,12 +21,12 @@ Tělo požadavku v případě POST a PUT musí být ve formátu JSON.
 
 Pro otestování naší API a ověření funkcionalit, které potřebujete stačí vytvořit účet na online.iucto.cz.
 
-Tento účet je zdarma na 14 dní. Počet dotazů je omezen na 2000 za den.
-Pokud budete potřebovat déle, tak se s námi spojíte a my vám ho můžeme prodloužit.
+Tento účet je zdarma na 14 dní. Počet dotazů je omezen na 2000 denně.
+Pokud jej budete potřebovat déle, spojte se s námi a my vám jej můžeme prodloužit.
 
 <a name="http-pozadavky"/>
 
-#Povolené HTTP požadavky:
+# Povolené HTTP požadavky:
 
 - `GET` - Získání záznamu, nebo seznamu
 - `POST` - Vytvoření nového záznamu
@@ -92,7 +92,7 @@ Při komunikaci prostřednictvím API má uživatel stejná oprávnění jako u 
 # Stránkování
 
 Stránkování je dostupné pouze u některých endpointů.
-Od verze API 1.2 je povinní ve všech dokumentech, platbách a adresáři.
+Od verze API 1.2 je povinné ve všech dokumentech, platbách a adresáři.
 
 Výchozí počet záznamů na stránku je 50. Maximální počet záznamů na stránku je 200.
 
@@ -105,7 +105,7 @@ Odpověď pak obsahuje údaje o celkovém počtu stránek.
 
 | Datový typ | Popis                                                |
 |------------|------------------------------------------------------|
-| String     | Textoví řetězec v kódování UTF-8                     |
+| String     | Textový řetězec v kódování UTF-8                     |
 | Number     | Celé číslo                                           |
 | Boolean    | Hodnoty `true` a `false`                             |
 | Date       | Datum ve formátu `YYYY-mm-dd`                        |
@@ -125,8 +125,8 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 | FP  | [Faktury přijaté](#faktury-prijate)                               |
 | ZFV | [Zálohové faktury vydané](#zalohove-faktury-vydane)               |
 | ZFP | [Zálohové faktury přijaté](#zalohove-faktury-prijate)             |
-| ODV | [Opravné_daňové_doklady_vydané](#opravne-danove-doklady-vydane)   |
-| ODP | [Opravné_daňové_doklady_přijaté](#opravne-danove-doklady-prijate) |
+| ODV | [Opravné daňové doklady vydané](#opravne-danove-doklady-vydane)   |
+| ODP | [Opravné daňové doklady přijaté](#opravne-danove-doklady-prijate) |
 | PV  | [Platby vydané](#platby-vydane)                                   |
 | PP  | [Platby přijaté](#platby-prijate)                                 |
 | OP  | [Objednávky přijaté](#objednavky-prijate)                         |
@@ -222,10 +222,10 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 
 ### Změny ve všech verzích API
 
-- invoice_isseud
+- invoice_issued
     * možnost odeslání dokladu emailem pomocí endpointu `/invoice_issued/{id}/email`
 
-- proforma_invoice_isseud
+- proforma_invoice_issued
     * možnost odeslání dokladu emailem pomocí endpointu `/proforma_invoice_issued/{id}/email`
 
 - creditnote_issued
@@ -246,7 +246,7 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 - bank_transaction
     * možnost filtrovat záznamy podle data
 
-- webooky
+- webhooky
     * vytvoření, editace, smazání dokladu
     * úhrada dokladu
 
@@ -256,7 +256,7 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 
 * povinné stránkování u všech dokladů, plateb, bankovních transakcí, zákazníků, dodavatelů a EET záznamů
 * povinný parametr `liquidation_amount` u plateb s vazbou na doklad v cizí měně
-* připojení zálohvých faktur k `invoice_issued` přes parametr `proforma_invoices`
+* připojení zálohových faktur k `invoice_issued` přes parametr `proforma_invoices`
 * Účetní deník `journal`
 * Přímé zaúčtování `direct_accounting`
 * Dobropisy přijaté `creditnote_received`
@@ -296,13 +296,13 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
     * inventory
     * stock_movement
 
-- order_recieved
+- order_received
     * přidání sloupce externí číslo objednávky
 
 ## 22.06.2020
 
 - bank_transaction
-    * zaúčtování pohyby a vytvoření platby
+    * zaúčtování pohybu a vytvoření platby
 
 - proforma_invoice_issued
     * stažení PDF
@@ -3349,7 +3349,7 @@ Aktuálně jsou podporovány pouze FV a FP.
 Datum ve formátu `YYYY-mm-dd`
 
 ## `price` (number)
-Číslo se dvemi desetinými místy ve formátu `1500.10`
+Číslo se dvěma desetinnými místy ve formátu `1500.10`
 ## `PAGING` (object)
 ### Properties
 - pageCount: 22 (number, optional) - Celkový počet stránek
@@ -4023,10 +4023,10 @@ Proměnné dostupné v detailu
 Proměnné pouze pro vytvoření emailu
 ### Properties
 - `message`: `Some message to send` (string, required) - Zpráva
-- `recipient`: `recipien1@example.org`,`recipien2@example.org` (array, required) - Příjemci emailu
+- `recipient`: `recipient1@example.org`,`recipient2@example.org` (array, required) - Příjemci emailu
 - `hidden_copy`: `no-reply@example.org` (array, optional) - Skrytí příjemci emailu
 - `attach_pdf`: `true` (boolean, optional) - Připojit PDF dokladu
-- `attach_delivery_note_pdf`: `true` (boolean, optional) - Připojit PDF dodacího listu(předávacího protokolu)
+- `attach_delivery_note_pdf`: `true` (boolean, optional) - Připojit PDF dodacího listu (předávacího protokolu)
 
 ## `CREDITNOTE_ISSUED_LIST_READONLY` (object)
 Proměnné pouze pro čtení dostupné v seznamu
@@ -4906,7 +4906,7 @@ Proměnné pouze pro zápis dostupné v detailu
 ### Properties
 - Include `PRICE_LIST_LIST_WRITABLE`
 - `description`: `Popis` (string, optional) - Poznámka
-- `accountentry_type_id`: `null` (string, optional) - [**Typ účetní položky**](#položky_typy_uc_polozek)
+- `accountentry_type_id`: `null` (string, optional) - [**Typ účetní položky**](#ucty-uc-osnovy)
 - `vattype_id`: `null` (string, optional) - [**Seznam typů DPH**](#typy-dph)
 - `chart_account_id`: `46` (number, optional)- [**Účet úč. osnovy**](#ucty-uc-osnovy)
 - `department_id`: `0` (number, optional) - [**Střediska**](#strediska)

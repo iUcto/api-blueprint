@@ -1,126 +1,131 @@
 FORMAT: 1A
 HOST: https://online.iucto.cz/api/1.3/
 
-# iÚčto
+# iÚčto API
 <a name="top"/>
 
-
+**Základní URL:**
 `https://online.iucto.cz/api`
 
-iÚčto API je založena na REST principu.
-API umožňuje práci s různými typy dokladů pomocí HTTP požadavků zasílaných ve formátu popsaném níže.
+API je postaveno na REST architektuře a komunikuje výhradně přes HTTPS.
+Všechny odpovědi jsou ve formátu [HAL+JSON](https://en.wikipedia.org/wiki/Hypertext_Application_Language).
+Tělo požadavků (POST, PUT) musí být ve formátu JSON.
 
-`Ke každému HTTP požadavku je nutné přidat HTTP hlavičku X-Auth-Key`
-
-Veškerá komunikace probíhá pomocí protokolu HTTPS.
-
-Odpovědi serveru jsou ve formátu [HAL+JSON](https://en.wikipedia.org/wiki/Hypertext_Application_Language).
-Tělo požadavku v případě POST a PUT musí být ve formátu JSON.
-
-# Testování API
-
-Pro otestování naší API a ověření funkcionalit, které potřebujete stačí vytvořit účet na online.iucto.cz.
-
-Tento účet je zdarma na 14 dní. Počet dotazů je omezen na 2000 denně.
-Pokud jej budete potřebovat déle, spojte se s námi a my vám jej můžeme prodloužit.
-
-<a name="http-pozadavky"/>
-
-# Povolené HTTP požadavky:
-
-- `GET` - Získání záznamu, nebo seznamu
-- `POST` - Vytvoření nového záznamu
-- `PUT` - Editace záznamu
-- `DELETE` - Smazání záznamu
-
-<a name="odpovedy-serveru"/>
-
-#Popis obvyklých odpovědí serveru
-
-- 200 `OK` - požadavek proběhl v pořádku (některé akce mohou vrátit 201).
-- 201 `Created` - požadavek proběhl v pořádku a záznam byl vytvořen.
-- 204 `No Content` - požadavek proběhl v pořádku, ale není nic co by se dalo vrátit (tělo odpovědi je prázdné).
-- 400 `Bad Request` - neznámý formát požadavku, je možné že chybí nějaké parametry.
-- 401 `Unauthorized` - špatný API klíč v požadavku.
-- 403 `Forbidden` - přístup odepřen, uživatel nemá potřebná oprávnění pro danou akci.
-- 404 `Not Found` - záznam nenalezen.
-- 405 `Method Not Allowed` - požadovaná metoda není podporována.
-
-Odpověď může obsahovat popis chyby. Například při vkládání nového záznamu se špatnými daty se vypíší chybové zprávy validace.
-
-## Výpis chybových hlášek
-
-| Kód | Chyba                                         |
-|:---:|-----------------------------------------------|
-| 400 | Komunikace musí probíhat přes protokol HTTPS. |
-| 400 | Neplatná verze API, nebo zdroj.               |
-| 400 | Tělo požadavku je prázdné.                    |
-| 400 | Neplatný JSON formát.                         |
-| 400 | Parametr 'doctype' je povinný.                |
-| 400 | Parametr 'doctype' není platný.               |
-| 400 | Parametr 'date' je povinný.                   |
-| 400 | Parametr 'date' není platný.                  |
-| 403 | Nelze smazat záznam.                          |
-| 403 | Účetní období, nebo období DPH je uzavřeno.   |
+---
 
 <a name="autentizace"/>
 
 # Autentizace
 
-K autentizaci každého HTTP požadavku slouží HTTP hlavička **X-Auth-Key**.
+Každý požadavek musí obsahovat HTTP hlavičku:
 
-Vzor HTTP hlavičky pro přihlášení:
+```
+X-Auth-Key: <váš_api_klíč>
+```
 
-    X-Auth-Key: 9f3ba84380c1a86b90f52bd46f0b6799
-
-Parametrem této hlavička je přístupoví klíč.
-**Klíč lze vygenerovat v nastavení -> Nastavení API** - [Stránka s nastavením](https://online.iucto.cz/settings/api)
-
-Ke každé firmě, ke které máte přístup se generuje samostatný klíč.
+- Klíč vygenerujete v **Nastavení → Nastavení API** ([odkaz](https://online.iucto.cz/settings/api)).
+- Každá firma má svůj vlastní klíč vázaný na uživatele.
+- Oprávnění uživatele v API odpovídají oprávněním ve webovém rozhraní.
 
 ![Vygenerování klíče](https://i.imgur.com/CoRy8im.png)
 
-Uživatel musí mít v nastavené správcem firmy oprávnění pro přístup přes API (výchozí stav je povolen).
-Při komunikaci prostřednictvím API má uživatel stejná oprávnění jako u webového rozhraní.
+Více o správě uživatelů: [Správa ACL](https://online.iucto.cz/users)
 
+---
 
-**[Správa ACL](https://online.iucto.cz/users)**
+# Testování API
 
+- Založte si účet na [online.iucto.cz](https://online.iucto.cz) (14 dní zdarma, 2000 dotazů/den).
+- Potřebujete-li delší testování, kontaktujte nás.
+
+---
+
+<a name="http-pozadavky"/>
+
+# Povolené HTTP metody
+
+| Metoda   | Význam                         |
+|----------|-------------------------------|
+| `GET`    | Získání záznamu/seznamu        |
+| `POST`   | Vytvoření nového záznamu       |
+| `PUT`    | Úprava existujícího záznamu    |
+| `DELETE` | Smazání záznamu                |
+
+---
+
+# Odpovědi serveru
+
+| Kód | Význam                                      |
+|-----|---------------------------------------------|
+| 200 | OK – požadavek úspěšně zpracován            |
+| 201 | Created – záznam vytvořen                   |
+| 204 | No Content – bez obsahu                     |
+| 400 | Bad Request – špatný formát/datové chyby    |
+| 401 | Unauthorized – neplatný API klíč            |
+| 403 | Forbidden – nedostatečná oprávnění          |
+| 404 | Not Found – záznam nenalezen                |
+| 405 | Method Not Allowed – metoda není podporována|
+
+Při chybě API vrací detailní popis v odpovědi.
+
+## Příklady chybových hlášek
+
+| Kód | Popis                                         |
+|-----|-----------------------------------------------|
+| 400 | Komunikace musí probíhat přes HTTPS           |
+| 400 | Neplatná verze API nebo zdroj                 |
+| 400 | Tělo požadavku je prázdné                     |
+| 400 | Neplatný JSON formát                          |
+| 400 | Parametr 'doctype' je povinný/není platný     |
+| 400 | Parametr 'date' je povinný/není platný        |
+| 403 | Nelze smazat záznam                           |
+| 403 | Účetní období nebo období DPH je uzavřeno     |
+
+---
 
 <a name="paging" />
 
 # Stránkování
 
-Stránkování je dostupné pouze u některých endpointů.
-Od verze API 1.2 je povinné ve všech dokumentech, platbách a adresáři.
+- Stránkování je povinné u dokumentů, plateb a adresáře (od API 1.2).
+- Výchozí velikost stránky: **50** záznamů, maximum: **200**.
+- Parametry dotazu:
+  - `page` – číslo stránky (od 1)
+  - `pageSize` – počet záznamů na stránku
 
-Výchozí počet záznamů na stránku je 50. Maximální počet záznamů na stránku je 200.
+**Příklad:**
+```
+GET /api/1.3/invoice_issued?page=2&pageSize=100
+```
 
-Pro nastavení stránky a počtu záznamů na stránku použijte parametry`page` a `pageSize`.
-Odpověď pak obsahuje údaje o celkovém počtu stránek.
+Odpověď obsahuje informace o stránkování (celkový počet stránek apod.).
+
+---
 
 <a name="data-types" />
 
 # Datové typy
 
-| Datový typ | Popis                                                |
-|------------|------------------------------------------------------|
-| String     | Textový řetězec v kódování UTF-8                     |
-| Number     | Celé číslo                                           |
-| Boolean    | Hodnoty `true` a `false`                             |
-| Date       | Datum ve formátu `YYYY-mm-dd`                        |
-| Price      | Číslo se dvěma desetinnými místy ve formátu `1500.10` |
+| Typ      | Popis                                         |
+|----------|-----------------------------------------------|
+| String   | Textový řetězec (UTF-8)                       |
+| Number   | Celé číslo                                    |
+| Boolean  | `true` nebo `false`                           |
+| Date     | Datum ve formátu `YYYY-mm-dd`                 |
+| Price    | Číslo s 2 desetinnými místy, např. `1500.10`  |
 
-Parametry uvedené jako volitelné, mohou nabývat hodnot `NULL`.
+Volitelné parametry mohou být `NULL`.
 
-# Typy dokladů
+---
 
 <a name="typy-dokladu" />
 
-Seznam dostupných dokladů přes API a jejich interní identifikátory pro získání např. [Typů DPH](#typy-dph).
+# Typy dokladů
 
-| Typ | Název                                                             |
-|:---:|-------------------------------------------------------------------|
+Seznam interních identifikátorů dokladů (pro parametry jako `doctype`):
+
+| Kód | Název                                             |
+|-----|---------------------------------------------------|
 | FV  | [Faktury vydané](#faktury-vydane)                                 |
 | FP  | [Faktury přijaté](#faktury-prijate)                               |
 | ZFV | [Zálohové faktury vydané](#zalohove-faktury-vydane)               |
@@ -133,7 +138,9 @@ Seznam dostupných dokladů přes API a jejich interní identifikátory pro zís
 | OV  | [Objednávky vydané](#objednavky-vydane)                           |
 | PZ  | [Přímé zaúčtování](#direct-accounting)                            |
 | IPN | [Interní předpisy nákladů](#interni-predpisy-nakladu)             |
-| UD  | Uzávěrkový doklad                                                 |
+| UD  | Uzávěrkový doklad                                 |
+
+---
 
 # Přehled změn
 

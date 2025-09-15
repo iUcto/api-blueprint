@@ -144,6 +144,14 @@ Seznam interních identifikátorů dokladů (pro parametry jako `doctype`):
 
 # Přehled změn
 
+## 15.09.2025
+
+- invoice_issued
+    * zrušení pole `customer_bank_account`, pole je pouze pro čtení a bude odstraněno kompletně
+
+### Novinky ve verzi API 1.3
+- nový endpoint pro informace o firmě [Detail firmy](#company_profile) `/company_profile`
+
 ## 19.02.2025
 
 ### Nová verze API 1.3
@@ -376,6 +384,20 @@ Seznam metod pro zaokrouhlování částek v dokladech.
     + Attributes (ROUNDING_TYPE)
 
 # Group Firma
+
+## Detail firmy [/company_profile]
+<a name="company_profile"></a>
+**/company_profile**
+
+### Detail firmy [GET /company_profile]
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - Include (`COMPANY_PROFILE`, required) - Detail firmy
 
 ## Bankovní účty [/bank_account]
 <a name="bankovni-ucty"></a>
@@ -3430,7 +3452,6 @@ Datum ve formátu `YYYY-mm-dd`
 ## `DOCUMENT_ISSUED_DETAIL_WRITABLE` (object)
 ### Properties
 - `payment_type` (`PAYMENT_TYPE_ENUM`, required) - [**Platební metody**](#metody-plateb)
-- `customer_bank_account`: `123456789/0800` (string) - Bankovní účet zákazníka
 - `date_vat_prev`: `2019-01-01` (date, optional) - [**Date**](#data-types) - Datum předchozí sazby DPH
 - `description`: `Popis` (string, optional) - Poznámka
 - `rounding_type` (`ROUNDING_TYPE_ENUM`, optional) - [**Způsob zaokrouhlení**](#zaokrouhleni)
@@ -3643,6 +3664,29 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 ### Properties
 - Include `BUSINESS_PREMISES_LINK`
 - Include `BUSINESS_PREMISES_DETAIL`
+
+## `COMPANY_PROFILE` (object)
+### Properties
+- `name`: `iÚčto` (string, optional) - Název firmy
+- `name_display`: `iÚčto` (string, optional) - Zobrazované jméno firmy
+- `address` (`ADDRESS`, required) - Adresa
+- `phone`: `+420123123123` (string, optional) - Telefon
+- `www`: `https://www.iucto.cz` (string, optional) - WWW
+- `email`: `novak.jan@example.org` (string, optional) - Email
+- `comid`: `00685776` (string, optional) - IČO
+- `data_box_id`: `123` (string, optional) - ID datové schránky
+- `owner` (`OWNER`, optional) - Jednatel společnosti
+- `vatid`: `CZ1234567` (string, optional) - DIČ
+- `icp`: `123` (string, required) - identifikační číslo provozovny
+- `vat_type`: `identified_person` (string, required) - Typ plátce DPH
+- `subject_type`: `legal_entity` (string, required) - Typ subjektu
+- `accounting_type`: `accountancy` (string, required) - Typ účtování
+- `oss_status`: false (boolean, required) - Stav OSS
+
+## `OWNER` (object)
+### Properties
+- `first_name`: `Jan` (string, optional) - Křestní jméno
+- `last_name`: `Novák` (string, optional) - Přijmení
 
 
 ## `CUSTOMER_READONLY` (object)
@@ -4012,7 +4056,6 @@ Proměnné dostupné v detailu
 ### Properties
 - Include `INVOICE_ISSUED_DETAIL_WRITABLE`
 - Include `DOCUMENT_ISSUED_CREATE`
-- `customer_bank_account`: `123456789/0800` (string) - Bankovní účet zákazníka
 - One Of
     - `eet`: false (boolean, optional) - Vygenerovat EET
     - One Of

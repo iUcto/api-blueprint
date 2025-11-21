@@ -2,7 +2,7 @@ FORMAT: 1A
 HOST: https://online.iucto.cz/api/1.3/
 
 # iÚčto API
-<a name="top"/>
+<a name="top"></a>
 
 **Základní URL:**
 `https://online.iucto.cz/api`
@@ -13,7 +13,7 @@ Tělo požadavků (POST, PUT) musí být ve formátu JSON.
 
 ---
 
-<a name="autentizace"/>
+<a name="autentizace"></a>
 
 # Autentizace
 
@@ -40,7 +40,7 @@ Více o správě uživatelů: [Správa ACL](https://online.iucto.cz/users)
 
 ---
 
-<a name="http-pozadavky"/>
+<a name="http-pozadavky"></a>
 
 # Povolené HTTP metody
 
@@ -83,7 +83,7 @@ Při chybě API vrací detailní popis v odpovědi.
 
 ---
 
-<a name="paging" />
+<a name="paging"></a>
 
 # Stránkování
 
@@ -102,7 +102,29 @@ Odpověď obsahuje informace o stránkování (celkový počet stránek apod.).
 
 ---
 
-<a name="data-types" />
+<a name="sorting"></a>
+# Řazení
+
+- Výchozí řazení záznamů je podle času vytvoření záznamu sestupně (nejnovější první).
+
+- Vlastní řazení je podporováno pomocí parametru dotazu `sort` od API verze 1.3.
+- Seznam dostupných polí pro řazení závisí na konkrétním endpointu (viz dokumentace jednotlivých zdrojů).
+- Lze řadit podle více polí najednou včetně určení směru (vzestupně/sestupně).
+- Parametr `sort` využívá těchto symbolů:
+  - `-` - volitelný prefix, řadí pole sestupně (výchozí řazení vzestupně)
+  - `,` – oddělovač polí, povinný pouze při řazení podle více polí
+  - **Nezapomeňte, že hodnota musí být URL encoded (viz příklad níže)**.
+
+**Příklad:**
+```
+GET /api/1.3/invoice_issued?sort=date%2C-currency
+```
+
+Výsledek: Faktury vydané od nejstaršího data po nejnovější (vzestupně) se sekundárním řazením podle měny (sestupně).
+
+---
+
+<a name="data-types"></a>
 
 # Datové typy
 
@@ -118,7 +140,7 @@ Volitelné parametry mohou být `NULL`.
 
 ---
 
-<a name="typy-dokladu" />
+<a name="typy-dokladu"></a>
 
 # Typy dokladů
 
@@ -144,6 +166,30 @@ Seznam interních identifikátorů dokladů (pro parametry jako `doctype`):
 
 # Přehled změn
 
+## 20.11.2025
+
+### Novinky ve verzi API 1.3
+- možnost [Řazení záznamů](#sorting) v seznamech
+    * prozatím pouze pole `modified` u některých dokladů
+- order_received, proforma_invoice_issued, invoice_issued, creditnote_issued, order_issued, proforma_invoice_received, invoice_received, creditnote_received, payment_issued, payment_received
+    * přidáno nové pole `modified` s časem poslední úpravy záznamu
+    * přidána možnost řazení podle pole `modified`
+- cash_register, bank_account
+    * přidána pole `balance` a `balance_czk` se aktuálním zůstatkem
+- invoice_issued, creditnote_issued, proforma_invoice_issued
+    * možnost vygenerování odkazu pro sdílení pomocí endpointu
+- bank_transaction
+    * pole`description_tome` a `description_toyou` jsou nyní dostupná i v seznamu záznamů
+    * přidán nový filtr `note` pro hledání v poznámkách k transakci `description_tome` a `description_toyou`
+
+### Změny ve všech verzích API
+
+- bank_transaction
+    * opraven filtr `status`
+- přidána možnost filtrovat podle měny dokladu pomocí `filter_price_by_doc_currency=true`, výchozí chování zůstává beze změny (filtrování podle CZK)
+- proforma_invoice_issued, proforma_invoice_received
+    * odstraněny nepoužívané parametry `date_vat` a `date_vat_prev`
+
 ## 15.09.2025
 
 - invoice_issued
@@ -151,6 +197,10 @@ Seznam interních identifikátorů dokladů (pro parametry jako `doctype`):
 
 ### Novinky ve verzi API 1.3
 - nový endpoint pro informace o firmě [Detail firmy](#company_profile) `/company_profile`
+- cash_register
+    * přidána pole `balance` a `balance_czk` do seznamu pokladen
+- bank_account
+    * přidána pole `balance` a `balance_czk` do seznamu bankovních účtů
 
 ## 19.02.2025
 
@@ -1008,7 +1058,7 @@ Zde uvedený výpis není kompletní, jedná se pouze o vzor.
 <a name="objednavky-prijate"></a>
 **/order_received**
 
-### Seznam objednávek [GET /order_received{?page,pageSize,customer_id,customer_ico,date_from,date_to,sequence_code,variable_symbol,currency,price_from,price_to,deleted,external_code}]
+### Seznam objednávek [GET /order_received{?page,pageSize,customer_id,customer_ico,date_from,date_to,sequence_code,variable_symbol,currency,price_from,price_to,filter_price_by_doc_currency,deleted,external_code}]
 Výpis všech dostupných dokladů.
 + Parameters
     + page: `1` (number, optional) - Číslo stránky
@@ -1022,6 +1072,7 @@ Výpis všech dostupných dokladů.
     + currency: `CZK` (string, optional) - Měna dokladu
     + price_from: `50` (price, optional) - Cena celkem OD
     + price_to: `100` (price, optional) - Cena celkem DO
+    + filter_price_by_doc_currency: `false` (boolean, optional) - Filtrovat cenu dle měny dokladu (výchozí `false`). `true` = hodnoty `price_from`/`price_to` jsou univerzální; `false`/`null` = hodnoty jsou v CZK
     + deleted: `false` (boolean, optional) - Smazáno
     + external_code: `OBJ123` (string, optional) - Externí kód
 
@@ -1108,7 +1159,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
 <a name="zalohove-faktury-vydane"></a>
 **/proforma_invoice_issued**
 
-### Seznam zálohových faktur vydané [GET /proforma_invoice_issued{?page,pageSize,customer_id,customer_ico,date_from,date_to,maturity_date_from,maturity_date_to,sequence_code,variable_symbol,currency,price_from,price_to,paid,deleted,payment_type,bank_account}]
+### Seznam zálohových faktur vydané [GET /proforma_invoice_issued{?page,pageSize,customer_id,customer_ico,date_from,date_to,maturity_date_from,maturity_date_to,sequence_code,variable_symbol,currency,price_from,price_to,filter_price_by_doc_currency,paid,deleted,payment_type,bank_account}]
 + Parameters
     + page: `1` (number, optional) - Číslo stránky
     + pageSize: `50` (number, optional) - Počet záznamů na stránku
@@ -1123,6 +1174,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
     + currency: `CZK` (string, optional) - Měna dokladu
     + price_from: `50` (price, optional) - Cena celkem OD
     + price_to: `100` (price, optional) - Cena celkem DO
+    + filter_price_by_doc_currency: `false` (boolean, optional) - Filtrovat cenu dle měny dokladu (výchozí `false`). `true` = hodnoty `price_from`/`price_to` jsou univerzální; `false`/`null` = hodnoty jsou v CZK
     + paid: `true` (boolean, optional) - Zaplaceno
     + deleted: `false` (boolean, optional) - Smazáno
     + payment_type: `transfer` (string, optional) - [**Platební metoda**](#metody-plateb)
@@ -1166,6 +1218,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
 Tyto parametry nejsou povinné
 - `date_vat`, `date_vat_prev`, `items.unit_price_inc_vat`, `items.vat`,  `items.vat_total`, `items.vattype_id`, `items.vat_chart_id`
 
+U zálohových faktur se nepoužívají parametry `date_vat` ani `date_vat_prev`.
 
 **Zaúčtování položek**
 
@@ -1251,6 +1304,26 @@ Vytvoří se plná úhrada dokladu.
         - _embedded (object, required)
             - `paymnet_received` (`PAYMENT_RECEIVED_DETAIL`, required) - Detail vytvořené platby
 
+### Generování odkazu pro sdílení [PUT /proforma_invoice_issued/{id}/share]
+
+Vygeneruje odkaz pro sdílení.
+Vrací detail faktury s odkazem na sdílení dokladu.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/proforma_invoice_issued/123/share (required)
+        - Include (`PROFORMA_INVOICE_ISSUED_DETAIL`, required) - Detail faktury
+
 ### Odeslání dokladu emailem [POST /proforma_invoice_issued/{id}/email]
 
 Odeslání emailu s odkazem na doklad a PDF na vámi zvolenou adresu.
@@ -1289,7 +1362,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
 <a name="faktury-vydane"></a>
 **/invoice_issued**
 
-### Seznam faktur vydaných  [GET /invoice_issued{?page,pageSize,customer_id,customer_ico,date_from,date_to,maturity_date_from,maturity_date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,paid,deleted,accounted,payment_type,bank_account}]
+### Seznam faktur vydaných  [GET /invoice_issued{?page,pageSize,customer_id,customer_ico,date_from,date_to,maturity_date_from,maturity_date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,filter_price_by_doc_currency,paid,deleted,accounted,payment_type,bank_account}]
 + Parameters
     + page: `1` (number, optional) - Číslo stránky
     + pageSize: `50` (number, optional) - Počet záznamů na stránku
@@ -1306,6 +1379,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
     + currency: `CZK` (string, optional) - Měna dokladu
     + price_from: `50` (price, optional) - Cena celkem OD
     + price_to: `100` (price, optional) - Cena celkem DO
+    + filter_price_by_doc_currency: `false` (boolean, optional) - Filtrovat cenu dle měny dokladu (výchozí `false`). `true` = hodnoty `price_from`/`price_to` jsou univerzální; `false`/`null` = hodnoty jsou v CZK
     + paid: `true` (boolean, optional) - Zaplaceno
     + deleted: `false` (boolean, optional) - Smazáno
     + accounted: `true` (boolean, optional) - Zaúčtované
@@ -1444,6 +1518,26 @@ Položky dokladu musejí mít nastavené zaúčtování.
                 - href: /1.3/invoice_issued/123 (required)
         - Include (`INVOICE_ISSUED_DETAIL`, required) - Detail faktury
 
+### Generování odkazu pro sdílení [PUT /invoice_issued/{id}/share]
+
+Vygeneruje odkaz pro sdílení. 
+Vrací detail faktury s odkazem na sdílení dokladu.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/invoice_issued/123/share (required)
+        - Include (`INVOICE_ISSUED_DETAIL`, required) - Detail faktury
+
 ### Stažení PDF faktury vydané [GET /invoice_issued/{id}/pdf]
 
 Vrátí binární data PDF souboru pro tisk nebo uložení do souboru.
@@ -1496,7 +1590,7 @@ Nelze smazat doklady s EET, použijte [Opravný daňový doklad](#opravne-danove
 <a name="opravne-danove-doklady-vydane"></a>
 **/creditnote_issued**
 
-### Seznam opravných dokladů [GET /creditnote_issued{?page,pageSize,customer_id,customer_ico,date_from,date_to,maturity_date_from,maturity_date_to,sequence_code,variable_symbol,currency,price_from,price_to,paid,deleted,accounted,payment_type,bank_account}]
+### Seznam opravných dokladů [GET /creditnote_issued{?page,pageSize,customer_id,customer_ico,date_from,date_to,maturity_date_from,maturity_date_to,sequence_code,variable_symbol,currency,price_from,price_to,filter_price_by_doc_currency,paid,deleted,accounted,payment_type,bank_account}]
 Výpis všech dostupných dokladů.
 
 + Parameters
@@ -1513,6 +1607,7 @@ Výpis všech dostupných dokladů.
     + currency: `CZK` (string, optional) - Měna dokladu
     + price_from: `50` (price, optional) - Cena celkem OD
     + price_to: `100` (price, optional) - Cena celkem DO
+    + filter_price_by_doc_currency: `false` (boolean, optional) - Filtrovat cenu dle měny dokladu (výchozí `false`). `true` = hodnoty `price_from`/`price_to` jsou univerzální; `false`/`null` = hodnoty jsou v CZK
     + paid: `true` (boolean, optional) - Zaplaceno
     + deleted: `false` (boolean, optional) - Smazáno
     + accounted: `true` (boolean, optional) - Zaúčtované
@@ -1636,6 +1731,25 @@ Položky dokladu musejí mít nastavené zaúčtování.
                 - href: /1.3/creditnote_issued/123 (required)
         - Include (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail dokladu
 
+### Generování odkazu pro sdílení [PUT /creditnote_issued/{id}/share]
+
+Vygeneruje odkaz pro sdílení.
+Vrací detail faktury s odkazem na sdílení dokladu.
+
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.2/creditnote_issued/123/share (required)
+        - Include (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail faktury
 
 ### Odeslání dokladu emailem [POST /creditnote_issued/{id}/email]
 
@@ -1673,7 +1787,7 @@ Nelze smazat doklady s EET, použijte nový [**Opravný daňový doklad**](#opra
 <a name="objednavky-vydane"></a>
 **/order_issued**
 
-### Seznam objednávek vydaných [GET /order_issued{?page,pageSize,supplier_id,supplier_ico,date_from,date_to,sequence_code,variable_symbol,currency,price_from,price_to,deleted}]
+### Seznam objednávek vydaných [GET /order_issued{?page,pageSize,supplier_id,supplier_ico,date_from,date_to,sequence_code,variable_symbol,currency,price_from,price_to,filter_price_by_doc_currency,deleted}]
 Výpis všech dostupných dokladů.
 + Parameters
     + page: `1` (number, optional) - Číslo stránky
@@ -1687,6 +1801,7 @@ Výpis všech dostupných dokladů.
     + currency: `CZK` (string, optional) - Měna dokladu
     + price_from: `50` (price, optional) - Cena celkem OD
     + price_to: `100` (price, optional) - Cena celkem DO
+    + filter_price_by_doc_currency: `false` (boolean, optional) - Filtrovat cenu dle měny dokladu (výchozí `false`). `true` = hodnoty `price_from`/`price_to` jsou univerzální; `false`/`null` = hodnoty jsou v CZK
     + deleted: `false` (boolean, optional) - Smazáno
 
 + Request
@@ -1774,7 +1889,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
 <a name="zalohove-faktury-prijate"></a>
 **/proforma_invoice_received**
 
-### Seznam zálohových faktur přijatých [GET /proforma_invoice_received{?page,pageSize,supplier_id,supplier_ico,date_from,date_to,maturity_date_from,maturity_date_to,sequence_code,variable_symbol,currency,price_from,price_to,paid,deleted,payment_type,external_code}]
+### Seznam zálohových faktur přijatých [GET /proforma_invoice_received{?page,pageSize,supplier_id,supplier_ico,date_from,date_to,maturity_date_from,maturity_date_to,sequence_code,variable_symbol,currency,price_from,price_to,filter_price_by_doc_currency,paid,deleted,payment_type,external_code}]
 + Parameters
     + page: `1` (number, optional) - Číslo stránky
     + pageSize: `50` (number, optional) - Počet záznamů na stránku
@@ -1789,6 +1904,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
     + currency: `CZK` (string, optional) - Měna dokladu
     + price_from: `50` (price, optional) - Cena celkem OD
     + price_to: `100` (price, optional) - Cena celkem DO
+    + filter_price_by_doc_currency: `false` (boolean, optional) - Filtrovat cenu dle měny dokladu (výchozí `false`). `true` = hodnoty `price_from`/`price_to` jsou univerzální; `false`/`null` = hodnoty jsou v CZK
     + paid: `true` (boolean, optional) - Zaplaceno
     + deleted: `false` (boolean, optional) - Smazáno
     + payment_type: `transfer` (string, optional) - [**Platební metoda**](#metody-plateb)
@@ -1830,7 +1946,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
 **Neplátci DPH**
 
 Tyto parametry nejsou povinné
-- `date_vat`, `date_vat_prev`, `items.unit_price_inc_vat`, `items.vat`,  `items.vat_total`, `items.vattype_id`, `itemsvat_chart_id`
+- `items.unit_price_inc_vat`, `items.vat`,  `items.vat_total`, `items.vattype_id`, `itemsvat_chart_id`
 
 
 **Zaúčtování položek**
@@ -1887,7 +2003,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
 <a name="faktury-prijate"></a>
 **/invoice_received**
 
-### Seznam faktur přijatých [GET /invoice_received{?page,pageSize,supplier_id,supplier_ico,date_from,date_to,maturity_date_from,maturity_date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,paid,deleted,accounted,payment_type,external_code}]
+### Seznam faktur přijatých [GET /invoice_received{?page,pageSize,supplier_id,supplier_ico,date_from,date_to,maturity_date_from,maturity_date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,filter_price_by_doc_currency,paid,deleted,accounted,payment_type,external_code}]
 + Parameters
     + page: `1` (number, optional) - Číslo stránky
     + pageSize: `50` (number, optional) - Počet záznamů na stránku
@@ -1904,6 +2020,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
     + currency: `CZK` (string, optional) - Měna dokladu
     + price_from: `50` (price, optional) - Cena celkem OD
     + price_to: `100` (price, optional) - Cena celkem DO
+    + filter_price_by_doc_currency: `false` (boolean, optional) - Filtrovat cenu dle měny dokladu (výchozí `false`). `true` = hodnoty `price_from`/`price_to` jsou univerzální; `false`/`null` = hodnoty jsou v CZK
     + paid: `true` (boolean, optional) - Zaplaceno
     + deleted: `false` (boolean, optional) - Smazáno
     + accounted: `true` (boolean, optional) - Zaúčtované
@@ -2138,7 +2255,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
 <a name="interni-predpisy-nakladu"></a>
 **/direct_expense**
 
-### Seznam interních předpisů nákladů [GET /direct_expense{?page,pageSize,supplier_id,supplier_ico,date_from,date_to,maturity_date_from,maturity_date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,paid,deleted,accounted,payment_type,external_code}]
+### Seznam interních předpisů nákladů [GET /direct_expense{?page,pageSize,supplier_id,supplier_ico,date_from,date_to,maturity_date_from,maturity_date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,filter_price_by_doc_currency,paid,deleted,accounted,payment_type,external_code}]
 + Parameters
     + page: `1` (number, optional) - Číslo stránky
     + pageSize: `50` (number, optional) - Počet záznamů na stránku
@@ -2155,6 +2272,7 @@ Pokusí se smazat vybraný dokladu. Pokud je doklad vázán na jiný záznam, vr
     + currency: `CZK` (string, optional) - Měna dokladu
     + price_from: `50` (price, optional) - Cena celkem OD
     + price_to: `100` (price, optional) - Cena celkem DO
+    + filter_price_by_doc_currency: `false` (boolean, optional) - Filtrovat cenu dle měny dokladu (výchozí `false`). `true` = hodnoty `price_from`/`price_to` jsou univerzální; `false`/`null` = hodnoty jsou v CZK
     + paid: `true` (boolean, optional) - Zaplaceno
     + deleted: `false` (boolean, optional) - Smazáno
     + accounted: `true` (boolean, optional) - Zaúčtované
@@ -2263,7 +2381,7 @@ Pokusí se smazat vybraný doklad. Pokud je doklad vázán na jiný záznam, vr�
 <a name="platby-vydane"></a>
 **/payment_issued**
 
-### Seznam plateb vydaných [GET /payment_issued{?page,pageSize,supplier_id,supplier_ico,customer_id,customer_ico,date_from,date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,deleted,external_code,invoice_id,creditnote_id,proforma_id,cash_register,bank_account}]
+### Seznam plateb vydaných [GET /payment_issued{?page,pageSize,supplier_id,supplier_ico,customer_id,customer_ico,date_from,date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,filter_price_by_doc_currency,deleted,external_code,invoice_id,creditnote_id,proforma_id,cash_register,bank_account}]
 + Parameters
     + page: `1` (number, optional) - Číslo stránky
     + pageSize: `50` (number, optional) - Počet záznamů na stránku
@@ -2280,6 +2398,7 @@ Pokusí se smazat vybraný doklad. Pokud je doklad vázán na jiný záznam, vr�
     + currency: `CZK` (string, optional) - Měna dokladu
     + price_from: `50` (price, optional) - Cena celkem OD
     + price_to: `100` (price, optional) - Cena celkem DO
+    + filter_price_by_doc_currency: `false` (boolean, optional) - Filtrovat cenu dle měny dokladu (výchozí `false`). `true` = hodnoty `price_from`/`price_to` jsou univerzální; `false`/`null` = hodnoty jsou v CZK
     + deleted: `false` (boolean, optional) - Smazáno
     + external_code: `FV303` (string, optional) - Externí kód
     + invoice_id: `12,55` (string, optional) - Filtr dle ID faktury (čárkou oddělená čísla)
@@ -2391,7 +2510,7 @@ Pokusí se smazat vybraný dokladu, vrátí chybu pokud se doklad nesmaže.
 <a name="platby-prijate"></a>
 **/payment_received**
 
-### Seznam plateb přijatých [GET /payment_received{?page,pageSize,supplier_id,supplier_ico,customer_id,customer_ico,date_from,date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,deleted,external_code,invoice_id,creditnote_id,proforma_id,cash_register,bank_account}]
+### Seznam plateb přijatých [GET /payment_received{?page,pageSize,supplier_id,supplier_ico,customer_id,customer_ico,date_from,date_to,date_vat_from,date_vat_to,sequence_code,variable_symbol,currency,price_from,price_to,filter_price_by_doc_currency,deleted,external_code,invoice_id,creditnote_id,proforma_id,cash_register,bank_account}]
 + Parameters
     + page: `1` (number, optional) - Číslo stránky
     + pageSize: `50` (number, optional) - Počet záznamů na stránku
@@ -2408,6 +2527,7 @@ Pokusí se smazat vybraný dokladu, vrátí chybu pokud se doklad nesmaže.
     + currency: `CZK` (string, optional) - Měna dokladu
     + price_from: `50` (price, optional) - Cena celkem OD
     + price_to: `100` (price, optional) - Cena celkem DO
+    + filter_price_by_doc_currency: `false` (boolean, optional) - Filtrovat cenu dle měny dokladu (výchozí `false`). `true` = hodnoty `price_from`/`price_to` jsou univerzální; `false`/`null` = hodnoty jsou v CZK
     + deleted: `false` (boolean, optional) - Smazáno
     + external_code: `FV303` (string, optional) - Externí kód
     + invoice_id: `12,55` (string, optional) - Filtr dle ID faktury (čárkou oddělená čísla)
@@ -2538,7 +2658,7 @@ Umožňuje automatické spárování účetní dokladů s pohyby na bankovních 
 Po vložení nového pohybu se systém pokusí automaticky pohyb spárovat s existující fakturou.
 
 
-### Seznam bankovních pohybů [GET /bank_transaction{?page,pageSize,payment_type,status,price_from,price_to,currency,variable_symbol,constant_symbol,specific_symbol,bank_account,bank_account_contraparty,date_payment_from,date_payment_to}]
+### Seznam bankovních pohybů [GET /bank_transaction{?page,pageSize,payment_type,status,price_from,price_to,currency,variable_symbol,constant_symbol,specific_symbol,bank_account,bank_account_contraparty,date_payment_from,date_payment_to,note}]
 
 Seznam bankovních pohybů, které jsou již importované v systému.
 
@@ -2557,6 +2677,7 @@ Seznam bankovních pohybů, které jsou již importované v systému.
     + bank_account_contraparty: `233445453/5500` (string, optional) - Bankovní účet protistrany
     + date_payment_from: `2019-01-01` (date, optional) - Datum platby OD
     + date_payment_to: `2019-02-01` (date, optional) - Datum platby DO
+    + note: `test` (string, optional) - Vyhledávání textu v polích description_tome a description_toyou
 
 + Request
     + Headers
@@ -3535,6 +3656,8 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 ### Properties
 - id: 456 (number, required) - ID účtu
 - number: `19-123457/0100` (string, required) - Číslo účtu
+- balance: 0.0 (number) - Aktuální zůstatek účtu v měně účtu
+- balance_czk: 0.0 (number) - Aktuální zůstatek účtu v CZK
 
 ## `BANK_ACCOUNT_BASE` (object)
 ### Properties
@@ -3587,6 +3710,8 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - `initial_state`: 0 (price) - [**Price**](#data-types) - Počáteční stav pokladny
 - iseet: true (boolean, required) - Zda je pokladna nastavená pro EET
 - `business_premises` (`BUSINESS_PREMISES_LIST`, optional)  - [**Provozovna**](#business-premises)
+- balance: 0.0 (number) - Aktuální zůstatek pokladny v měně pokladny
+- balance_czk: 0.0 (number) - Aktuální zůstatek pokladny v CZK
 
 ## `CASH_REGISTER_LIST` (object)
 ### Properties
@@ -3950,6 +4075,7 @@ Proměnné pouze pro čtení dostupné v seznamu
 - Include `DOCUMENT_ISSUED_LIST_READONLY`
 - `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zbývá uhradit
 - `to_be_invoiced`: `50` (price, required) - [**Price**](#data-types) - Zbývá odečíst
+- share_link: `https://online.iucto.cz/link/p?s=e71e2a7cd30c06bc33faa1be40959e7de108fd2f28c1` - Link sdílení (string)
 
 ## `PROFORMA_INVOICE_ISSUED_LIST_WRITABLE` (object)
 Proměnné dostupné v seznamu
@@ -4014,6 +4140,7 @@ Proměnné pouze pro čtení dostupné v seznamu
 - accounted: `true` (boolean, required) - Zaúčtováno
 - `proforma_invoice` (array[`INVOICE_ISSUED_PROFORMA_ID`], optional) - Pole ID zálohových faktur
 - eet: `false` (boolean, required) - Odesláno do EET
+- share_link: `https://online.iucto.cz/link/i?s=e71e2a7cd30c06bc33faa1be40959e7de108fd2f28a1` - Link sdílení (string)
 
 ## `INVOICE_ISSUED_LIST_WRITABLE` (object)
 - Include `DOCUMENT_ISSUED_LIST_WRITABLE`
@@ -4085,6 +4212,7 @@ Proměnné pouze pro čtení dostupné v seznamu
 - `to_be_paid`: `50` (price, required) - [**Price**](#data-types) - Zbývá uhradit
 - accounted: `true` (boolean, required) - Zaúčtováno
 - eet: `false` (boolean, required) - Odesláno do EET
+- share_link: `https://online.iucto.cz/link/c?s=e71e2a7cd30c06bc33faa1be40959e7de108fd2f28c1` - Link sdílení (string)
 
 
 ## `CREDITNOTE_ISSUED_LIST_WRITABLE` (object)
@@ -4756,6 +4884,8 @@ Tento objekt reprezentuje zjednodušený náhled bankovní transakce.
 - Include `BANK_STATEMENT_BASE`
 - `bank_account` (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bankovni-ucty)
 - `counterparty` (object, optional) - protistrany, pro příchozí pohyb [Zákazník](#zakaznici), pro odchozí [Dodavatel](#dodavatele)
+- `description_tome` (string, optional) - Poznámka pro mě (API 1.3+)
+- `description_toyou` (string, optional) - Poznámka pro zákazníka (API 1.3+)
 
 ## `BANK_STATEMENT_DIRECTION` (enum)
 

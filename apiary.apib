@@ -128,13 +128,14 @@ Výsledek: Faktury vydané od nejstaršího data po nejnovější (vzestupně) s
 
 # Datové typy
 
-| Typ      | Popis                                         |
-|----------|-----------------------------------------------|
-| String   | Textový řetězec (UTF-8)                       |
-| Number   | Celé číslo                                    |
-| Boolean  | `true` nebo `false`                           |
-| Date     | Datum ve formátu `YYYY-mm-dd`                 |
-| Price    | Číslo s 2 desetinnými místy, např. `1500.10`  |
+| Typ        | Popis                                         |
+|------------|-----------------------------------------------|
+| String     | Textový řetězec (UTF-8)                       |
+| Number     | Celé číslo                                    |
+| Boolean    | `true` nebo `false`                           |
+| Date       | Datum ve formátu `YYYY-mm-dd`                 |
+| Timestamp  | Datum a čas ve formátu ISO 8601               |
+| Price      | Číslo s 2 desetinnými místy, např. `1500.10`  |
 
 Volitelné parametry mohou být `NULL`.
 
@@ -165,6 +166,18 @@ Seznam interních identifikátorů dokladů (pro parametry jako `doctype`):
 ---
 
 # Přehled změn
+
+## 12.3.2026
+
+### Novinky ve verzi API 1.3
+
+- nový endpoint pro [Došlé doklady](#document_scan) `/document_scan`
+
+- nový endpoint pro stavy dokladů [Stavy dokladů](#document_state) `/document_state`
+- order_received, proforma_invoice_issued, invoice_issued, creditnote_issued, order_issued, proforma_invoice_received, invoice_received, creditnote_received, direct_expense
+    * přidáno nové pole `document_state_id` pro editaci stavu dokladu
+    * přidán pole `document_state` v deatilu dokladu
+
 
 ## 20.11.2025
 
@@ -797,6 +810,91 @@ Pokusí se smazat vybranou zakázku. Pokud je ovšem vázán na jiný záznam (f
                 - href: /1.3/business_premises/897 (required)
         - Include (`BUSINESS_PREMISES_DETAIL`, required) - Detail provozovny
 
+## Stavy dokladů [/document_state]
+<a name="document_state"></a>
+**/document_state**
+
+### Seznam stavů dokladů [GET /document_state{?page,pageSize,name,name_search,description,description_search,visibility}]
++ Parameters
+    + page: `1` (number, optional) - Číslo stránky
+    + pageSize: `50` (number, optional) - Počet záznamů na stránku
+    + name: `Odesláno` (string, optional) - Název stavu
+    + name_search: `Odes` (string, optional) - Hledaný název stavu
+    + description: `Doklad byl odeslán zákazníkovi` (string, optional) - Popis stavu
+    + description_search: `Doklad` (string, optional) - Hledaný popis stavu
+    + visibility: `true` (boolean, optional) - Viditelnost stavu
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.3/document_state (required)
+        - _embedded (object)
+            - `document_state` (array[`DOCUMENT_STATE_DETAIL`], required) - Pole stavů dokladů
+        - Include (`PAGING`, required) - Stránkování
+
+### Detail stavu dokladu [GET /document_state/{id}]
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.3/document_state/123 (required)
+        - Include (`DOCUMENT_STATE_DETAIL`, required) - Detail stavu dokladu
+
+### Vytvoření nového stavu dokladu [POST /document_state]
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+            Content-Type: application/json
+
+    + Attributes (`DOCUMENT_STATE_CREATE`)
++ Response 201 (application/hal+json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.3/document_state/123 (required)
+        - Include (`DOCUMENT_STATE_DETAIL`, required) - Detail stavu dokladu
+
+### Editace stavu dokladu [PUT /document_state/{id}]
++ Parameters
+    + id: 123 (number, required)
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object)
+            - self (object)
+                - href: /1.3/document_state/123 (required)
+        - Include (`DOCUMENT_STATE_DETAIL`, required) - Detail stavu dokladu
+
+### Smazání stavu dokladu [DELETE /document_state/{id}]
++ Parameters
+    + id: 123 (number, required)
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 204
+
 # Group Adresář
 
 ## Zákazníci [/customer]
@@ -1321,7 +1419,7 @@ Vrací detail faktury s odkazem na sdílení dokladu.
     + Attributes (object)
         - _link (object, required)
             - self (object, required)
-                - href: /1.2/proforma_invoice_issued/123/share (required)
+                - href: /1.3/proforma_invoice_issued/123/share (required)
         - Include (`PROFORMA_INVOICE_ISSUED_DETAIL`, required) - Detail faktury
 
 ### Odeslání dokladu emailem [POST /proforma_invoice_issued/{id}/email]
@@ -1520,7 +1618,7 @@ Položky dokladu musejí mít nastavené zaúčtování.
 
 ### Generování odkazu pro sdílení [PUT /invoice_issued/{id}/share]
 
-Vygeneruje odkaz pro sdílení. 
+Vygeneruje odkaz pro sdílení.
 Vrací detail faktury s odkazem na sdílení dokladu.
 
 + Parameters
@@ -1535,7 +1633,7 @@ Vrací detail faktury s odkazem na sdílení dokladu.
     + Attributes (object)
         - _link (object, required)
             - self (object, required)
-                - href: /1.2/invoice_issued/123/share (required)
+                - href: /1.3/invoice_issued/123/share (required)
         - Include (`INVOICE_ISSUED_DETAIL`, required) - Detail faktury
 
 ### Stažení PDF faktury vydané [GET /invoice_issued/{id}/pdf]
@@ -1748,7 +1846,7 @@ Vrací detail faktury s odkazem na sdílení dokladu.
     + Attributes (object)
         - _link (object, required)
             - self (object, required)
-                - href: /1.2/creditnote_issued/123/share (required)
+                - href: /1.3/creditnote_issued/123/share (required)
         - Include (`CREDITNOTE_ISSUED_DETAIL`, required) - Detail faktury
 
 ### Odeslání dokladu emailem [POST /creditnote_issued/{id}/email]
@@ -1783,6 +1881,59 @@ Nelze smazat doklady s EET, použijte nový [**Opravný daňový doklad**](#opra
 + Response 204
 
 # Group Doklady přijaté
+## Došlé doklady [/document_scan]
+<a name="document_scan"></a>
+**/document_scan**
+
+### Seznam došlých dokladů [GET /document_scan{?page,pageSize,status,timestamp_from,timestamp_to}]
+Výpis všech došlých dokladů.
++ Parameters
+    + page: `1` (number, optional) - Číslo stránky
+    + pageSize: `50` (number, optional) - Počet záznamů na stránku
+    + status: `to_review` (string, optional) - Stav zpracování došlého dokladu.
+    + timestamp_from: `2025-01-01T14:04:45+01:00` (string, optional) -[**Timestamp**](#data-types) - Datum a čas nahrání souboru OD
+    + timestamp_to: `2025-08-04T14:04:45+02:00` (string, optional) - [**Timestamp**](#data-types) - Datum a čas nahrání souboru DO
+
++ Request
+    + Headers
+
+            X-Auth-Key: api-key
+
++ Response 200 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.3/document_scan (required)
+        - _embedded (object, required)
+            - `document_scan` (array[`DOCUEMNT_SCAN_LIST`], required) - Pole došlých dokladů
+        - Include (`PAGING`, required) - Stránkování
+
+### Nahrání došléhého dokladu [POST /document_scan]
+Nahrání nového došlého dokladu ke zpracování.
+
+* Nahrávat lze pouze soubory ve formátu .png, .jpeg, .jpg, .pdf, .xml, .isdoc, .isdocx, WebFakt.
+* Maximální velikost souboru je 4 MB.
+
++ Request (multipart/form-data; boundary=BOUNDARY)
+    + Headers
+
+            X-Auth-Key: api-key
+
+    + Body
+
+            ------BOUNDARY
+            Content-Disposition: form-data; name="file"; filename="/path/to/your/file/filename.isdocx"
+            Content-Type: application/xml
+
+            (data)
+            ------BOUNDARY
+
++ Response 201 (application/hal+json)
+    + Attributes (object)
+        - _link (object, required)
+            - self (object, required)
+                - href: /1.3/document_scan/123 (required)
+        - Include (`DOCUEMNT_SCAN_DETAIL`, required) - Detail došlého dokladu
 ## Objednávky vydané [/order_issued]
 <a name="objednavky-vydane"></a>
 **/order_issued**
@@ -2374,6 +2525,7 @@ Pokusí se smazat vybraný doklad. Pokud je doklad vázán na jiný záznam, vr�
             X-Auth-Key: api-key
 
 + Response 204
+
 
 
 # Group Platby
@@ -3581,6 +3733,7 @@ Datum ve formátu `YYYY-mm-dd`
 ### Properties
 - `customer` (`CUSTOMER_DETAIL`, required) - Zákazník
 - `bank_account` (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bankovni-ucty)
+- `document_state` (`DOCUMENT_STATE_DETAIL`, optional) - [Stav dokladu](#document_state)
 
 ## `DOCUMENT_ISSUED_CREATE` (object)
 ### Properties
@@ -3593,7 +3746,7 @@ Datum ve formátu `YYYY-mm-dd`
     - Properties
         - `payment_type`: transfer, creditcard (enum, required) - [**Platební metody**](#metody-plateb)
         - `bank_account`: 456 (number, required) - ID [**bankovního účtu**](#bankovni-ucty)
-
+- `document_state_id`: 67 (number, optional) - ID [Stavu dokladu](#document_state)
 
 
 
@@ -3645,6 +3798,29 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 
 
 
+
+## `COMPANY_PROFILE` (object)
+### Properties
+- `name`: `iÚčto` (string, optional) - Název firmy
+- `name_display`: `iÚčto` (string, optional) - Zobrazované jméno firmy
+- `address` (`ADDRESS`, required) - Adresa
+- `phone`: `+420123123123` (string, optional) - Telefon
+- `www`: `https://www.iucto.cz` (string, optional) - WWW
+- `email`: `novak.jan@example.org` (string, optional) - Email
+- `comid`: `00685776` (string, optional) - IČO
+- `data_box_id`: `123` (string, optional) - ID datové schránky
+- `owner` (`OWNER`, optional) - Jednatel společnosti
+- `vatid`: `CZ1234567` (string, optional) - DIČ
+- `icp`: `123` (string, required) - identifikační číslo provozovny
+- `vat_type`: `identified_person` (string, required) - Typ plátce DPH
+- `subject_type`: `legal_entity` (string, required) - Typ subjektu
+- `accounting_type`: `accountancy` (string, required) - Typ účtování
+- `oss_status`: false (boolean, required) - Stav OSS
+
+## `OWNER` (object)
+### Properties
+- `first_name`: `Jan` (string, optional) - Křestní jméno
+- `last_name`: `Novák` (string, optional) - Přijmení
 
 ## `BANK_ACCOUNT_LINK` (object)
 ### Properties
@@ -3790,28 +3966,18 @@ Seznam metod pro zaokrouhlování částek v dokladech.
 - Include `BUSINESS_PREMISES_LINK`
 - Include `BUSINESS_PREMISES_DETAIL`
 
-## `COMPANY_PROFILE` (object)
+## `DOCUMENT_STATE_CREATE` (object)
+Vytvoření stavu
 ### Properties
-- `name`: `iÚčto` (string, optional) - Název firmy
-- `name_display`: `iÚčto` (string, optional) - Zobrazované jméno firmy
-- `address` (`ADDRESS`, required) - Adresa
-- `phone`: `+420123123123` (string, optional) - Telefon
-- `www`: `https://www.iucto.cz` (string, optional) - WWW
-- `email`: `novak.jan@example.org` (string, optional) - Email
-- `comid`: `00685776` (string, optional) - IČO
-- `data_box_id`: `123` (string, optional) - ID datové schránky
-- `owner` (`OWNER`, optional) - Jednatel společnosti
-- `vatid`: `CZ1234567` (string, optional) - DIČ
-- `icp`: `123` (string, required) - identifikační číslo provozovny
-- `vat_type`: `identified_person` (string, required) - Typ plátce DPH
-- `subject_type`: `legal_entity` (string, required) - Typ subjektu
-- `accounting_type`: `accountancy` (string, required) - Typ účtování
-- `oss_status`: false (boolean, required) - Stav OSS
+- `name`: `Odesláno` (string, required) - Název stavu
+- `description`: `Doklad byl odeslán zákazníkovi` (string, required) - Popis stavu
+- `visibility`: true (boolean, required) - Viditelnost stavu
 
-## `OWNER` (object)
+## `DOCUMENT_STATE_DETAIL` (object)
+Detail stavu
 ### Properties
-- `first_name`: `Jan` (string, optional) - Křestní jméno
-- `last_name`: `Novák` (string, optional) - Přijmení
+- `id`: 123 (number, required) - ID stavu
+- Include `DOCUMENT_STATE_CREATE`
 
 
 ## `CUSTOMER_READONLY` (object)
@@ -4059,6 +4225,7 @@ Proměnné dostupné v detailu
 - Include `ORDER_RECEIVED_DETAIL_READONLY`
 - Include `ORDER_RECEIVED_DETAIL_WRITABLE`
 - `customer` (`CUSTOMER_DETAIL`, required) - Zákazník
+- `document_state` (`DOCUMENT_STATE_DETAIL`, optional) - [Stav dokladu](#document_state)
 
 ## `ORDER_RECEIVED_CREATE` (object)
 Zapisovatelné proměnné pro vytváření a editaci dokladu
@@ -4066,6 +4233,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - Include `ORDER_RECEIVED_DETAIL_WRITABLE`
 - items (array[`DOCUMENT_ITEMS_CREATE`], required) - Pole položek
 - `customer_id`: 785 (number, required) - ID [zákazníka](#zakaznici)
+- `document_state_id`: 67 (number, optional) - ID [Stavu dokladu](#document_state)
 
 
 
@@ -4274,6 +4442,33 @@ Proměnné pouze pro vytvoření emailu
 - `hidden_copy`: `no-reply@example.org` (array, optional) - Skrytí příjemci emailu
 - `attach_pdf`: `true` (boolean, optional) - Připojit PDF dokladu
 
+## `DOCUEMNT_SCAN_DETAIL` (object)
+### Properties
+- `id`: 546 (number, required) - ID dokladu
+- `file_name`: `FV2026001.pdf` (string, required) - Název souboru
+- `status`: `uploaded` (`DOCUEMNT_SCAN_STATUSES`, required) - Stav zpracování
+- `format`: `pdf` (string, required) - Formát souboru
+- `created`: `2026-03-12T11:48:21+01:00` (string, required) - [**Timestamp**](#data-types) - Datum a čas nahrání souboru
+
+## `DOCUEMNT_SCAN_LIST` (object)
+Proměnné dostupné v seznamu
+### Properties
+- _link (object)
+    - self (object)
+        - href: /1.3/direct_expense/123 (required)
+- Include `DOCUEMNT_SCAN_DETAIL`
+
+
+## `DOCUEMNT_SCAN_STATUSES` (enum)
+Stavy zpracování došlého dokladu
+
+### Members
+- `uploaded` - Nový
+- `choose_processing_type` - Zvolit typ zpracování
+- `processing` - Zpracovávání
+- `failed` - Selhalo
+- `to_review` - Ke kontrole
+- `imported` - Importováno
 ## `ORDER_ISSUED_LIST_READONLY` (object)
 Proměnné pouze pro čtení dostupné v seznamu
 ### Properties
@@ -4321,6 +4516,7 @@ Proměnné dostupné v detailu
 - Include `ORDER_ISSUED_DETAIL_READONLY`
 - Include `ORDER_ISSUED_DETAIL_WRITABLE`
 - `supplier` (`SUPPLIER_DETAIL`, required) - Dodavatel
+- `document_state` (`DOCUMENT_STATE_DETAIL`, optional) - [Stav dokladu](#document_state)
 
 ## `ORDER_ISSUED_CREATE` (object)
 Zapisovatelné proměnné pro vytváření a editaci dokladu
@@ -4328,6 +4524,7 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
 - Include `ORDER_ISSUED_DETAIL_WRITABLE`
 - items (array[`DOCUMENT_ITEMS_CREATE`], required) - Pole položek
 - `supplier_id`: 785 (number, required) - ID [dodavatele](#dodavatele)
+- `document_state_id`: 67 (number, optional) - ID [Stavu dokladu](#document_state)
 ## `PROFORMA_INVOICE_RECEIVED_LIST_READONLY` (object)
 Proměnné pouze pro čtení dostupné v seznamu
 ### Properties
@@ -4633,6 +4830,7 @@ Proměnné dostupné v detailu
 - Include `DIRECT_EXPENSE_DETAIL_WRITABLE`
 - `supplier` (`SUPPLIER_DETAIL`, required) - Dodavatel
 - `bank_account` (`BANK_ACCOUNT_DETAIL`, optional) - [**Bankovní účet**](#bankovni-ucty)
+- `document_state` (`DOCUMENT_STATE_DETAIL`, optional) - [Stav dokladu](#document_state)
 
 ## `DIRECT_EXPENSE_CREATE` (object)
 Zapisovatelné proměnné pro vytváření a editaci dokladu
@@ -4648,6 +4846,8 @@ Zapisovatelné proměnné pro vytváření a editaci dokladu
     - Properties
         - `payment_type`: transfer, creditcard (enum, required) - [**Platební metody**](#metody-plateb)
         - `bank_account`: 456 (number, required) - ID [**bankovního účtu**](#bankovni-ucty)
+- `document_state_id`: 67 (number, optional) - ID [Stavu dokladu](#document_state)
+
 
 ## `PAYMENT_ISSUED_LIST_READONLY` (object)
 ### Properties
